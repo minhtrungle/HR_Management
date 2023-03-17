@@ -107,7 +107,7 @@ public class DepartmentDAO {
             throw new RuntimeException("Không có phòng ban thõa mãn!");
         }
 
-        final String sql = String.format("UPDATE `departments` SET `dept_id`='%d', `dept_name` = '%s', `manager_id` = '%d', `location_id` = '%d',",
+        final String sql = String.format("UPDATE `departments` SET `dept_id` = '%d', `dept_name` = '%s', `manager_id` = '%d', `location_id` = '%d'",
                 d.getDept_id(), d.getDept_name(), d.getManager_id(), d.getLocation_id());
 
         try {
@@ -143,7 +143,7 @@ public class DepartmentDAO {
             long res = sta.executeUpdate(sql);
 
             if (res == 0) {
-                System.out.println("Update departments thất bại");
+                System.out.println("Delete departments thất bại");
             }
 
             sta.close();
