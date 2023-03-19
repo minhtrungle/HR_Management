@@ -1,76 +1,86 @@
 package Application;
+
 import Connection.ConnectJDBC;
+
+import java.sql.Connection;
+import Model.User;
+
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.sql.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-public class Login extends JFrame implements ActionListener{
+public class Login extends JDialog{
+    public Login(JFrame parent) {
+        super(parent);
+        setTitle("Login");
+        setContentPane(loginPanel);
+        setMinimumSize(new Dimension(450, 480));
+        setModal(true);
+        setLocationRelativeTo(parent);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        signInButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userName = textUsername.getText();
+                String passWord = String.valueOf(textPassword.getPassword());
+                final String sql = "SELECT * FROM `users` WHERE `username` = ? AND `passwords` = ?";
 
-    JTextField tfusername, tfpassword;
+                try {
+                    Connection con = ConnectJDBC.getConnection();
 
-    Login() {
+                    PreparedStatement pre = con.prepareStatement(sql);
 
-        getContentPane().setBackground(Color.WHITE);
-        setLayout(null);
+                    pre.setString(1, userName);
+                    pre.setString(2, passWord);
 
-        JLabel lblusername = new JLabel("Username");
-        lblusername.setBounds(40, 20, 100, 30);
-        add(lblusername);
+                    ResultSet res = pre.executeQuery();
 
-        tfusername = new JTextField();
-        tfusername.setBounds(150, 20, 150, 30);
-        add(tfusername);
+                    if (res.next()) {
+//                        JOptionPane.showMessageDialog(null,
+//                                "Đăng nhập thành công");
+                        Home home = new Home();
+                        home.setVisible(true);
+                        setVisible(false); //đóng cửa sổ
 
-        JLabel lblpassword = new JLabel("Password");
-        lblpassword.setBounds(40, 70, 100, 30);
-        add(lblpassword);
-
-        tfpassword = new JTextField();
-        tfpassword.setBounds(150, 70, 150, 30);
-        add(tfpassword);
-
-        JButton login = new JButton("LOGIN");
-        login.setBounds(150, 140, 150, 30);
-        login.setBackground(Color.BLACK);
-        login.setForeground(Color.WHITE);
-        login.addActionListener(this);
-        add(login);
-
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/second.jpg"));
-        Image i2 = i1.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT);
-        ImageIcon i3 = new ImageIcon(i2);
-        JLabel image = new JLabel(i3);
-        image.setBounds(350, 0, 200, 200);
-        add(image);
-
-        setSize(600, 300);
-        setLocation(450, 200);
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "username hoặc password không thõa mãn!",
+                                "Try again",
+                                JOptionPane.ERROR_MESSAGE);
+                        textUsername.setText("");
+                        textPassword.setText("");
+//                        if (textPassword.setText("")) {
+//
+//                        }
+                    }
+                    pre.close();
+                    res.close();
+                    con.close();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComponent component = (JComponent) e.getSource();
+                Window window = SwingUtilities.getWindowAncestor(component);
+                window.dispose();
+            }
+        });
         setVisible(true);
     }
-
-    public void actionPerformed(ActionEvent ae) {
-        try {
-            Connection con = ConnectJDBC.getConnection();
-            String username = tfusername.getText();
-            String password = tfpassword.getText();
-
-            String query = "select * from users where username = '"+username+"' and password = '"+password+"'";
-            Statement sta = con.createStatement();
-            ResultSet rs = sta.executeQuery(query);
-            if (rs.next()) {
-                setVisible(false);
-                new Home();
-            } else {
-                JOptionPane.showMessageDialog(null, "Invalid username or password");
-                setVisible(false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        new Login();
-    }
+    public User user;
+    private JTextField textUsername;
+    private JPasswordField textPassword;
+    private JButton cancelButton;
+    private JButton signInButton;
+    private JPanel loginPanel;
 }
