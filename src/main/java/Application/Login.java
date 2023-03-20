@@ -29,7 +29,7 @@ public class Login extends JDialog{
             public void actionPerformed(ActionEvent e) {
                 String userName = textUsername.getText();
                 String passWord = String.valueOf(textPassword.getPassword());
-                final String sql = "SELECT * FROM `users` WHERE `username` = ? AND `passwords` = ?";
+                final String sql = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ?";
 
                 try {
                     Connection con = ConnectJDBC.getConnection();
@@ -44,8 +44,7 @@ public class Login extends JDialog{
                     if (res.next()) {
 //                        JOptionPane.showMessageDialog(null,
 //                                "Đăng nhập thành công");
-                        Home home = new Home();
-                        home.setVisible(true);
+                        new Home();
                         setVisible(false); //đóng cửa sổ
 
                     } else {
