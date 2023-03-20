@@ -10,6 +10,7 @@ create table if not exists users (
 Insert into users (username, password)
 values
 ('admin', 'admin'),
+('a', 'a'),
 ('trunglm', 'trunglm');
 
 drop table if exists departments;
