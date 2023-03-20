@@ -1,23 +1,20 @@
-package Application;
+package Application.Home;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+
+import Application.Employee.AddEmployee;
 import Connection.ConnectJDBC;
 public class Home {
     public Home() {
-        employeeButton.addActionListener(new ActionListener() {
+
+        addEmpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        departmentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
+                SwingUtilities.invokeLater(Home::createUpdateGUI);
             }
         });
     }
@@ -31,7 +28,17 @@ public class Home {
         showData2();
         return homePanel;
     }
+    private static void createUpdateGUI(){
+        AddEmployee updateUI = new AddEmployee();
+        JPanel updateRoot = updateUI.getAddEmployeePanel();
 
+        JFrame jFrame = new JFrame();
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setContentPane(updateRoot);
+        jFrame.pack();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
+    }
     private DefaultTableModel tableModel;
     private ResultSet resultSet;
     private PreparedStatement preparedStatement;
@@ -54,7 +61,7 @@ public class Home {
                         resultSet.getString("lastname"),
                         resultSet.getString("email"),
                         resultSet.getString("phone"),
-                        resultSet.getDate("hire_date"),
+                        resultSet.getDate("hire_date"), //yyyy/mm/dd
                         resultSet.getString("job"),
                         resultSet.getInt("salary"),
                         resultSet.getDouble("commission"),
@@ -95,5 +102,10 @@ public class Home {
     private JTable table1;
     private JTable table2;
     private JButton employeeButton;
-    private JButton departmentButton;
+    private JButton updateEmpButton;
+    private JButton deleteEmpButton;
+    private JButton addDeptButton;
+    private JButton updateDeptButton;
+    private JButton deleteDeptButton;
+    private JButton addEmpButton;
 }
