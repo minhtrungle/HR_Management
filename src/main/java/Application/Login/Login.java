@@ -50,7 +50,7 @@ public class Login extends JDialog{
                     } else {
                         JOptionPane.showMessageDialog(null,
                                 "username hoặc password không thõa mãn!",
-                                "Try again",
+                                "Cảnh báo",
                                 JOptionPane.ERROR_MESSAGE);
                         textUsername.setText("");
                         textPassword.setText("");
@@ -69,8 +69,11 @@ public class Login extends JDialog{
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Tạo đối tượng từ Jcomponent để xử lý xự kiện
                 JComponent component = (JComponent) e.getSource();
+                //Tạo object để chứa
                 Window window = SwingUtilities.getWindowAncestor(component);
+                //Đóng JFram
                 window.dispose();
                 Home home = new Home();
             }
