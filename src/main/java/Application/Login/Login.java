@@ -1,5 +1,6 @@
-package Application;
+package Application.Login;
 
+import Application.Home.Home;
 import Connection.ConnectJDBC;
 
 import java.sql.Connection;
@@ -13,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Login extends JDialog{
     public Login(JFrame parent) {
