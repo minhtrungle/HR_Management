@@ -72,6 +72,7 @@ public class Login extends JDialog{
                 JComponent component = (JComponent) e.getSource();
                 Window window = SwingUtilities.getWindowAncestor(component);
                 window.dispose();
+                Home home = new Home();
             }
         });
         setVisible(true);

@@ -2,9 +2,26 @@ package Application;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 import Connection.ConnectJDBC;
 public class Home {
+    public Home() {
+        employeeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        departmentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+    }
+
     public void Home() {
         showData1();
         showData2();
@@ -77,5 +94,6 @@ public class Home {
     private JPanel homePanel;
     private JTable table1;
     private JTable table2;
-    private JTable jTable;
+    private JButton employeeButton;
+    private JButton departmentButton;
 }
