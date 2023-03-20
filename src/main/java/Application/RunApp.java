@@ -1,5 +1,8 @@
 package Application;
 
+import Application.Home.Home;
+import Application.Login.Login;
+
 import javax.swing.*;
 
 public class RunApp {
