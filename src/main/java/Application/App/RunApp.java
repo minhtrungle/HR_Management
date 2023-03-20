@@ -1,4 +1,4 @@
-package Application;
+package Application.App;
 
 import Application.Home.Home;
 import Application.Login.Login;
