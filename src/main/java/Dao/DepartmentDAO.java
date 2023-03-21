@@ -51,7 +51,7 @@ public class DepartmentDAO {
     }
 
     public Department getByID(int id) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         final String sql = "SELECT * FROM `departments` WHERE `id` = " + id;
         Department d = null;
 

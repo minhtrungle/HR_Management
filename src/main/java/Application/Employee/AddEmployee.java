@@ -86,9 +86,6 @@ public class AddEmployee {
             }
         });
     }
-    public void refreshData() {
-
-    }
     public JPanel getAddEmployeePanel(){
         return addEmployPanel;
     }
