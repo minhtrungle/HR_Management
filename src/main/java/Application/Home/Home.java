@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
+import Application.Department.AddDepartment;
+import Application.Department.UpdateDepartment;
 import Application.Employee.AddEmployee;
 import Application.Employee.DeleteEmployee;
 import Application.Employee.UpdateEmployee;
@@ -22,9 +24,9 @@ public class Home {
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(Home::createAddEmployeeGUI);
                 //Loát lại table Employee
-                DefaultTableModel model = (DefaultTableModel) table1.getModel();
-                model.setRowCount(0);
-                showData1();
+//                DefaultTableModel model = (DefaultTableModel) table1.getModel();
+//                model.setRowCount(0);
+//                showData1();
             }
         });
         updateEmpButton.addActionListener(new ActionListener() {
@@ -39,6 +41,25 @@ public class Home {
                 SwingUtilities.invokeLater(Home::createDeleteEmployeeGUI);
             }
         });
+        addDeptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(Home::createAddDepartmentGUI);
+            }
+        });
+        updateDeptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(Home::createUpdateDepartmentGUI);
+            }
+        });
+        deleteDeptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,13 +75,13 @@ public class Home {
         //Tạo đối tượng add bên AddEmployee
         AddEmployee add = new AddEmployee();
         //Thêm panel addEmployeePanel bên AddEmployee.form
-        JPanel updateRoot = add.getAddEmployeePanel();
+        JPanel addEmp = add.getAddEmployeePanel();
         //JFrame(): Xây dựng một Frame mới, ban đầu là không nhìn thấy (invisible).
         JFrame jFrame = new JFrame();
         //đóng mặc định của JFrame bằng cách chuyển một trong bốn hằng số vào phương thức setDefaultCloseOperation()
         //HIDE_ON_CLOSE JFrame sẽ bị ẩn đi khi người dùng đóng nó lại. Chương trình vẫn sẽ hoạt động
         jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        jFrame.setContentPane(updateRoot);
+        jFrame.setContentPane(addEmp);
         jFrame.pack();
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
@@ -68,22 +89,22 @@ public class Home {
 
     private static void createUpdateEmployeeGUI() {
         UpdateEmployee update = new UpdateEmployee();
-        JPanel updateRoot = update.getUpdateEmployeePanel();
+        JPanel updateEmp = update.getUpdateEmployeePanel();
 
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        jFrame.setContentPane(updateRoot);
+        jFrame.setContentPane(updateEmp);
         jFrame.pack();
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
     }
     private static void createDeleteEmployeeGUI() {
         DeleteEmployee delete = new DeleteEmployee();
-        JPanel deleteRoot = delete.getDeleteEmployeePanel();
+        JPanel deleteEmp = delete.getDeleteEmployeePanel();
 
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        jFrame.setContentPane(deleteRoot);
+        jFrame.setContentPane(deleteEmp);
         jFrame.pack();
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
@@ -92,10 +113,26 @@ public class Home {
      * Các hàm để khi bấm button sẽ gọi bên .form để hiện form của Department
      */
     private static void createAddDepartmentGUI() {
+        AddDepartment add = new AddDepartment();
+        JPanel addDept = add.getAddDepartmentPane();
 
+        JFrame jFrame = new JFrame();
+        jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jFrame.setContentPane(addDept);
+        jFrame.pack();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
     }
     private static void createUpdateDepartmentGUI() {
+        UpdateDepartment update = new UpdateDepartment();
+        JPanel updateDept = update.getUpdateDepartmentPanel();
 
+        JFrame jFrame = new JFrame();
+        jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jFrame.setContentPane(updateDept);
+        jFrame.pack();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
     }
     private static void createDeleteDepartmentGUI() {
 
@@ -175,4 +212,5 @@ public class Home {
     private JButton addEmpButton;
     private JButton searchButton;
     private JButton refreshButton;
+    private JButton changeDepartmentButton;
 }
