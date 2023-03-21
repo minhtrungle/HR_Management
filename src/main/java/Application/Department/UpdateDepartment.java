@@ -96,7 +96,8 @@ public class UpdateDepartment {
         } catch (SQLException err){
             throw new RuntimeException(err);
         }
-    }private static void createAddEmpFromDeptGUI() {
+    }
+    private static void createAddEmpFromDeptGUI() {
         AddEmployee add = new AddEmployee();
         JPanel addEmp = add.getAddEmployeePanel();
 

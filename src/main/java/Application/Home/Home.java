@@ -7,10 +7,12 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 import Application.Department.AddDepartment;
+import Application.Department.DeleteDepartment;
 import Application.Department.UpdateDepartment;
 import Application.Employee.AddEmployee;
 import Application.Employee.DeleteEmployee;
 import Application.Employee.UpdateEmployee;
+import Application.OtherFunctions.ChangeDepartment;
 import Connection.ConnectJDBC;
 /**
  * Hiển thị các chức năng chọn và hiện danh sách employees và departments trong database
@@ -56,7 +58,8 @@ public class Home {
         deleteDeptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                JOptionPane.showMessageDialog(null, "Trước khi xóa phải chuyển phòng ban cho nhân viên, đồng ý thì tích còn không thì BƯỚC", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                SwingUtilities.invokeLater(Home::createDeleteDepartmentGUI);
             }
         });
 
@@ -65,6 +68,18 @@ public class Home {
             public void actionPerformed(ActionEvent e) {
                 showData1();
                 showData2();
+            }
+        });
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        changeDepartmentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(Home::createChangeDepartmentGUI);
             }
         });
     }
@@ -135,7 +150,30 @@ public class Home {
         jFrame.setVisible(true);
     }
     private static void createDeleteDepartmentGUI() {
+        DeleteDepartment delete = new DeleteDepartment();
+        JPanel deleteDept = delete.getDeleteDepartmentPanel();
 
+        JFrame jFrame = new JFrame();
+        jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jFrame.setContentPane(deleteDept);
+        jFrame.pack();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
+    }
+
+    /**
+     * Các hàm các chức năng khác
+     */
+    private static void createChangeDepartmentGUI() {
+        ChangeDepartment change = new ChangeDepartment();
+        JPanel changeDept = change.getChangeDepartmentPanel();
+
+        JFrame jFrame = new JFrame();
+        jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jFrame.setContentPane(changeDept);
+        jFrame.pack();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
     }
     private DefaultTableModel tableModel;
     private ResultSet resultSet;
