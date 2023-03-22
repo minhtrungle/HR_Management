@@ -13,6 +13,7 @@ import Application.Employee.AddEmployee;
 import Application.Employee.DeleteEmployee;
 import Application.Employee.UpdateEmployee;
 import Application.OtherFunctions.ChangeDepartment;
+import Application.OtherFunctions.ChangeManager;
 import Connection.ConnectJDBC;
 /**
  * Hiển thị các chức năng chọn và hiện danh sách employees và departments trong database
@@ -79,10 +80,25 @@ public class Home {
         changeDepartmentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Nếu nhân viên tạm thời chưa được xếp phòng ban thì không tích vào ô", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 SwingUtilities.invokeLater(Home::createChangeDepartmentGUI);
             }
         });
+        changeManagerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(Home::createChangeManagerGUI);
+            }
+        });
+        incomeTaxButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
+
+
     /**
      * Các hàm để khi bấm button sẽ gọi bên .form để hiện form của Employee
      */
@@ -175,6 +191,17 @@ public class Home {
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
     }
+    private static void createChangeManagerGUI() {
+        ChangeManager change = new ChangeManager();
+        JPanel changeDept = change.getChangeManagerPanel();
+
+        JFrame jFrame = new JFrame();
+        jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jFrame.setContentPane(changeDept);
+        jFrame.pack();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
+    }
     private DefaultTableModel tableModel;
     private ResultSet resultSet;
     private void showData1(){
@@ -251,4 +278,6 @@ public class Home {
     private JButton searchButton;
     private JButton refreshButton;
     private JButton changeDepartmentButton;
+    private JButton changeManagerButton;
+    private JButton incomeTaxButton;
 }

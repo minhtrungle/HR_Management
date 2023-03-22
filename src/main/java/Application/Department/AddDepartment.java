@@ -27,16 +27,16 @@ public class AddDepartment {
                         String managerId = textManagerId.getText();
                         String locationId = textLocationId.getText();
                         final String sql = "INSERT INTO `departments` (dept_id, dept_name, manager_id, location_id) VALUES (?, ?, ?, ?)";
-                        if (!Objects.equals(managerId, "")) {
-                            try {
-                                Connection con = ConnectJDBC.getConnection();
 
-                                PreparedStatement pre = con.prepareStatement(sql);
+                        try {
+                            Connection con = ConnectJDBC.getConnection();
 
-                                pre.setString(1, deptId);
-                                pre.setString(2, deptName);
-                                pre.setString(3, managerId);
-                                pre.setString(4, locationId);
+                            PreparedStatement pre = con.prepareStatement(sql);
+
+                            pre.setString(1, deptId);
+                            pre.setString(2, deptName);
+                            pre.setString(3, managerId);
+                            pre.setString(4, locationId);
 
 //                                DepartmentDAO departmentDAO = new DepartmentDAO();
 //                                Department dep = departmentDAO.getByID(Integer.parseInt(deptId));
@@ -45,36 +45,29 @@ public class AddDepartment {
 //                                            "Department Id đã tồn tại",
 //                                            "Cảnh báo", JOptionPane.ERROR_MESSAGE);
 //                                }
-                                pre.executeUpdate();
+                            pre.executeUpdate();
 
-                                JOptionPane.showMessageDialog(null, "Thêm phòng ban thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                                Home home = new Home();
-                                home.getMainPanel();
-                                //Đóng
-                                JComponent component = (JComponent) e.getSource();
-                                Window window = SwingUtilities.getWindowAncestor(component);
-                                window.dispose();
+                            JOptionPane.showMessageDialog(null, "Thêm phòng ban thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                            Home home = new Home();
+                            home.getMainPanel();
+                            //Đóng
+                            JComponent component = (JComponent) e.getSource();
+                            Window window = SwingUtilities.getWindowAncestor(component);
+                            window.dispose();
 
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                            textDepartmentId.setText("");
-                            textDepartmentName.setText("");
-                            textManagerId.setText("");
-                            textLocationId.setText("");
-                        } else {
-                            JOptionPane.showMessageDialog(null,
-                                    "Không được để trống Manager Id",
-                                    "Cảnh báo", JOptionPane.ERROR_MESSAGE);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                         }
+                        textDepartmentId.setText("");
+                        textDepartmentName.setText("");
+                        textManagerId.setText("");
+                        textLocationId.setText("");
                     });
-
                 } else {
                     addButton.addActionListener(e -> {
                         String deptId = textDepartmentId.getText();
                         String deptName = textDepartmentName.getText();
                         String locationId = textLocationId.getText();
-                        int managerId = 0;
                         final String sql = "INSERT INTO `departments` (dept_id, dept_name, manager_id, location_id) VALUES (?, ?, ?, ?)";
                         try {
                             Connection con = ConnectJDBC.getConnection();
@@ -82,7 +75,7 @@ public class AddDepartment {
 
                             pre.setString(1, deptId);
                             pre.setString(2, deptName);
-                            pre.setInt(3, managerId);
+                            pre.setString(3, null);
                             pre.setString(4, locationId);
 
                             pre.executeUpdate();

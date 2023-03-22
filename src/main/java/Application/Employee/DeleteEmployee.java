@@ -20,9 +20,8 @@ public class DeleteEmployee {
 
                 //Kiểm tra không để trống
                 if (!Objects.equals(id, "")) {
-                    Connection con = null;
                     try {
-                        con = ConnectJDBC.getConnection();
+                        Connection con = ConnectJDBC.getConnection();
 
                         PreparedStatement pre = con.prepareStatement(sql);
 

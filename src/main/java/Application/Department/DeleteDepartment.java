@@ -9,10 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Objects;
 
 public class DeleteDepartment {
     public DeleteDepartment() {
@@ -29,10 +27,34 @@ public class DeleteDepartment {
                     });
                     //Không còn nhân viên mới xóa được
                     if (showTableEmpOfDept() == false) {
+                        JOptionPane.showMessageDialog(null, "Không còn nhân viên có thể xóa phòng ban", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                         deleteButton.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
+                                String idDept = textDeptId.getText();
+                                final String sql = "DELETE FROM `employees` WHERE dept_id = ?";
+                                if (!Objects.equals(idDept, "")) {
+                                    try {
+                                        Connection con = ConnectJDBC.getConnection();
 
+                                        PreparedStatement pre = con.prepareStatement(sql);
+
+                                        pre.setString(1, idDept);
+                                        //Cập nhật dữ liệu
+                                        pre.executeUpdate();
+                                        //Đóng cửa sổ khi cập nhật xong
+                                        JOptionPane.showMessageDialog(null, "Xóa phòng ban thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                        JComponent component = (JComponent) e.getSource();
+                                        Window window = SwingUtilities.getWindowAncestor(component);
+                                        window.dispose();
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null,
+                                            "Không được để trống",
+                                            "Cảnh báo", JOptionPane.ERROR_MESSAGE);
+                                }
                             }
                         });
                     }
