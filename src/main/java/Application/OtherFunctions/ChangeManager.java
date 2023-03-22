@@ -7,4 +7,5 @@ public class ChangeManager {
         return changeManagerPanel;
     }
     private JPanel changeManagerPanel;
+    private JTextField textDeptId;
 }
