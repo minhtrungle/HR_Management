@@ -13,7 +13,8 @@ import Application.Employee.AddEmployee;
 import Application.Employee.DeleteEmployee;
 import Application.Employee.UpdateEmployee;
 import Application.OtherFunctions.ChangeDepartment;
-import Application.OtherFunctions.ChangeManager;
+import Application.OtherFunctions.IncomeTax;
+import Application.OtherFunctions.Search;
 import Connection.ConnectJDBC;
 /**
  * Hiển thị các chức năng chọn và hiện danh sách employees và departments trong database
@@ -74,26 +75,21 @@ public class Home {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                SwingUtilities.invokeLater(Home::createSearchEmployeeGUI);
             }
         });
         changeDepartmentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Nếu nhân viên tạm thời chưa được xếp phòng ban thì không tích vào ô", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Nếu nhân viên tạm thời chưa được xếp phòng ban thì không tích vào ô. \n" +
+                        "Nếu chuyển quản lý thì danh sách quản lý đó bên Employee và Department phải cập nhật cùng ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 SwingUtilities.invokeLater(Home::createChangeDepartmentGUI);
-            }
-        });
-        changeManagerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(Home::createChangeManagerGUI);
             }
         });
         incomeTaxButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                SwingUtilities.invokeLater(Home::createIncomeTaxGUI);
             }
         });
     }
@@ -180,6 +176,17 @@ public class Home {
     /**
      * Các hàm các chức năng khác
      */
+    private static void createSearchEmployeeGUI() {
+        Search search = new Search();
+        JPanel searchEmp = search.getSearchEmployeePanel();
+
+        JFrame jFrame = new JFrame();
+        jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jFrame.setContentPane(searchEmp);
+        jFrame.pack();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
+    }
     private static void createChangeDepartmentGUI() {
         ChangeDepartment change = new ChangeDepartment();
         JPanel changeDept = change.getChangeDepartmentPanel();
@@ -191,13 +198,13 @@ public class Home {
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
     }
-    private static void createChangeManagerGUI() {
-        ChangeManager change = new ChangeManager();
-        JPanel changeDept = change.getChangeManagerPanel();
+    private static void createIncomeTaxGUI() {
+        IncomeTax getIncomeTax = new IncomeTax();
+        JPanel incomtaxEmp = getIncomeTax.getIncomeTaxPanel();
 
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        jFrame.setContentPane(changeDept);
+        jFrame.setContentPane(incomtaxEmp);
         jFrame.pack();
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);

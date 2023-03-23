@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.*;
+import java.util.Objects;
 
 public class ChangeDepartment {
     public ChangeDepartment() {
@@ -89,6 +90,66 @@ public class ChangeDepartment {
             Window window = SwingUtilities.getWindowAncestor(component);
             window.dispose();
         });
+        changeManagerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String managerId = textManagerId.getText();
+                String deptId = textDeptId.getText();
+                String sql = "UPDATE `employees` SET manager_id = ? WHERE department_id = ?";
+
+                try {
+                    Connection con = ConnectJDBC.getConnection();
+
+                    PreparedStatement pre = con.prepareStatement(sql);
+
+
+                    pre.setString(1, managerId);
+                    pre.setString(2, deptId);
+                    //Cập nhật dữ liệu
+                    pre.executeUpdate();
+                    //Đóng cửa sổ khi cập nhật xong
+                    JComponent component = (JComponent) e.getSource();
+                    Window window = SwingUtilities.getWindowAncestor(component);
+                    window.dispose();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        changeManagerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String managerId = textManagerId.getText();
+                String deptId = textDeptId.getText();
+                String sql = "UPDATE `departments` SET manager_id = ? WHERE dept_id = ?";
+
+                if (!Objects.equals(managerId, "") && !Objects.equals(deptId, "")) {
+                    try {
+                        Connection con = ConnectJDBC.getConnection();
+
+                        PreparedStatement pre = con.prepareStatement(sql);
+
+
+                        pre.setString(1, managerId);
+                        pre.setString(2, deptId);
+                        //Cập nhật dữ liệu
+                        pre.executeUpdate();
+                        //Đóng cửa sổ khi cập nhật xong
+                        JOptionPane.showMessageDialog(null, "Cập nhật Manager Id thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        JComponent component = (JComponent) e.getSource();
+                        Window window = SwingUtilities.getWindowAncestor(component);
+                        window.dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(null,
+                            "Không được để trống",
+                            "Cảnh báo", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
     private DefaultTableModel tableModel;
     private ResultSet resultSet;
@@ -127,4 +188,5 @@ public class ChangeDepartment {
     private JButton cancelButton;
     private JButton changeButton;
     private JTextField textManagerId;
+    private JButton changeManagerButton;
 }

@@ -1,7 +1,10 @@
 package Application;
 
+import Dao.EmployeeDAO;
 import Model.Department;
 import Connection.ConnectJDBC;
+import Model.Employee;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,5 +41,8 @@ public class MainTest {
             ex.printStackTrace();
         }
         System.out.println( departmentList +"\n" );
+        EmployeeDAO employeeDAO = new EmployeeDAO();
+        Employee e = employeeDAO.getByID(1);
+        System.out.println(e);
     }
 }

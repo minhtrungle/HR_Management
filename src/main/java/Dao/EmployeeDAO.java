@@ -19,7 +19,7 @@ public class EmployeeDAO {
      * @return employeeList
      */
     public static List<Employee> getAllEmployee() throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         List<Employee> employeeList = new ArrayList<>();
         Employee e = new Employee();
         final String sql = "SELECT * FROM `employees`";
@@ -56,7 +56,7 @@ public class EmployeeDAO {
     }
 
     public Employee getByID(int id) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         final String sql = "SELECT * FROM `employees` WHERE `id` = " + id;
         Employee e = null;
 
@@ -66,6 +66,7 @@ public class EmployeeDAO {
             ResultSet res = sta.executeQuery(sql);
 
             if(res.next()) {
+                e = new Employee();
                 e.setId(res.getInt("id"));
                 e.setFirstname(res.getString("firstname"));
                 e.setLastname(res.getString("lastname"));
@@ -88,9 +89,31 @@ public class EmployeeDAO {
         }
         return e;
     }
+    public static Employee getSalaryOfEmployeeByID(int id) throws SQLException {
+        Connection con = ConnectJDBC.getConnection();
+        Employee e = new Employee();
+        final String sql = "SELECT salary FROM `employees` WHERE id = " + id;
 
+        try {
+            Statement sta = con.createStatement();
+
+            ResultSet res = sta.executeQuery(sql);
+
+            if (res.next()) {
+                e.setSalary(res.getInt("salary"));
+            }
+
+            res.close();
+            sta.close();
+            con.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return e;
+    }
     public Employee getByFirstName(String name) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         final String sql = "SELECT * FROM `employees` WHERE `firstname` LIKE '%" + name + "%'";
         Employee e = null;
 
@@ -100,6 +123,7 @@ public class EmployeeDAO {
             ResultSet res = sta.executeQuery(sql);
 
             if(res.next()) {
+                e = new Employee();
                 e.setId(res.getInt("id"));
                 e.setFirstname(res.getString("firstname"));
                 e.setLastname(res.getString("lastname"));
@@ -124,7 +148,7 @@ public class EmployeeDAO {
     }
 
     public Employee getByPhone(String phone) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         final String sql = "SELECT * FROM `employees` WHERE `phone` LIKE '%" + phone + "%'";
         Employee e = null;
 
@@ -134,6 +158,7 @@ public class EmployeeDAO {
             ResultSet res = sta.executeQuery(sql);
 
             if(res.next()) {
+                e = new Employee();
                 e.setId(res.getInt("id"));
                 e.setFirstname(res.getString("firstname"));
                 e.setLastname(res.getString("lastname"));
@@ -157,7 +182,7 @@ public class EmployeeDAO {
         return e;
     }
     public Employee getByEmail(String email) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         final String sql = "SELECT * FROM `employees` WHERE `email` LIKE '%" + email + "%'";
         Employee e = null;
 
@@ -167,6 +192,7 @@ public class EmployeeDAO {
             ResultSet res = sta.executeQuery(sql);
 
             if(res.next()) {
+                e = new Employee();
                 e.setId(res.getInt("id"));
                 e.setFirstname(res.getString("firstname"));
                 e.setLastname(res.getString("lastname"));
@@ -191,7 +217,7 @@ public class EmployeeDAO {
     }
 
     public void insertEmployee(Employee e) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         final String sql = String.format("INSERT INTO `employees` VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%f', '%d', '%d')",
                e.getId(), e.getFirstname(), e.getLastname(), e.getEmail(), e.getPhone(), e.getHire_date(), e.getJob(), e.getSalary(),
                 e.getCommission(), e.getManager_id(), e.getDepartment_id());
@@ -214,7 +240,7 @@ public class EmployeeDAO {
     }
 
     public void updateEmployee(Employee e, int id) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
 
         Employee emp = getByID(id);
         if (emp == null) {
@@ -244,7 +270,7 @@ public class EmployeeDAO {
     }
 
     public void deleteEmployee(int id) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
 
         Employee emp = getByID(id);
         if (emp == null) {
