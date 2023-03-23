@@ -23,75 +23,46 @@ import Connection.ConnectJDBC;
 public class Home {
     public Home() {
 
-        addEmpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(Home::createAddEmployeeGUI);
-                //Loát lại table Employee
+        addEmpButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "Trước khi thêm phải kiểm tra Id đã tồn tại chưa \n" +
+                    "Nếu chưa thêm Manager và Department thì nhập 0", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            SwingUtilities.invokeLater(Home::createAddEmployeeGUI);
+            //Loát lại table Employee
 //                DefaultTableModel model = (DefaultTableModel) table1.getModel();
 //                model.setRowCount(0);
 //                showData1();
-            }
-        });
-        updateEmpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(Home::createUpdateEmployeeGUI);
-            }
-        });
-        deleteEmpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(Home::createDeleteEmployeeGUI);
-            }
-        });
-        addDeptButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(Home::createAddDepartmentGUI);
-            }
-        });
-        updateDeptButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(Home::createUpdateDepartmentGUI);
-            }
-        });
-        deleteDeptButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Trước khi xóa phải chuyển phòng ban cho nhân viên, đồng ý thì tích còn không thì BƯỚC", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                SwingUtilities.invokeLater(Home::createDeleteDepartmentGUI);
-            }
         });
 
-        refreshButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showData1();
-                showData2();
-            }
+        updateEmpButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createUpdateEmployeeGUI));
+
+        deleteEmpButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "Nếu sa thải trưởng phòng cần cập nhật lại danh sách trưởng phòng ở Employee và Department", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            SwingUtilities.invokeLater(Home::createDeleteEmployeeGUI);
         });
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(Home::createSearchEmployeeGUI);
-            }
+
+        addDeptButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createAddDepartmentGUI));
+
+        updateDeptButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createUpdateDepartmentGUI));
+
+        deleteDeptButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "Trước khi xóa phải chuyển phòng ban cho nhân viên, đồng ý thì tích còn không thì BƯỚC", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            SwingUtilities.invokeLater(Home::createDeleteDepartmentGUI);
         });
-        changeDepartmentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Nếu nhân viên tạm thời chưa được xếp phòng ban thì không tích vào ô. \n" +
-                        "Nếu chuyển quản lý thì danh sách quản lý đó bên Employee và Department phải cập nhật cùng ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                SwingUtilities.invokeLater(Home::createChangeDepartmentGUI);
-            }
+
+        refreshButton.addActionListener(e -> {
+            showEmployee();
+            showDepartment();
         });
-        incomeTaxButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(Home::createIncomeTaxGUI);
-            }
+
+        searchButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createSearchEmployeeGUI));
+
+        changeDepartmentButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "Nếu nhân viên tạm thời chưa được xếp phòng ban thì không tích vào ô. \n" +
+                    "Nếu chuyển quản lý thì danh sách quản lý đó bên Employee và Department phải cập nhật cùng ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            SwingUtilities.invokeLater(Home::createChangeDepartmentGUI);
         });
+
+        incomeTaxButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createIncomeTaxGUI));
     }
 
 
@@ -211,7 +182,7 @@ public class Home {
     }
     private DefaultTableModel tableModel;
     private ResultSet resultSet;
-    private void showData1(){
+    private void showEmployee(){
         try {
             Object[] columnTitle = {"id", "firstname", "lastname", "email", "phone",
                     "hire_date", "job", "salary", "commission", "manager_id", "department_id"};
@@ -243,7 +214,7 @@ public class Home {
             throw new RuntimeException(err);
         }
     }
-    private void showData2() {
+    private void showDepartment() {
         try {
             Object[] columnTitle = {"dept_id", "dept_name", "manager_id", "location_id"};
             tableModel = new DefaultTableModel(null, columnTitle);
@@ -268,14 +239,13 @@ public class Home {
         }
     }
     public JPanel getMainPanel(){
-        showData1();
-        showData2();
+        showEmployee();
+        showDepartment();
         return homePanel;
     }
     private JPanel homePanel;
     private JTable table1;
     private JTable table2;
-    private JButton employeeButton;
     private JButton updateEmpButton;
     private JButton deleteEmpButton;
     private JButton addDeptButton;
@@ -285,6 +255,5 @@ public class Home {
     private JButton searchButton;
     private JButton refreshButton;
     private JButton changeDepartmentButton;
-    private JButton changeManagerButton;
     private JButton incomeTaxButton;
 }

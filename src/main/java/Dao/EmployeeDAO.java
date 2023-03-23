@@ -2,10 +2,8 @@ package Dao;
 
 import Model.Employee;
 import Connection.ConnectJDBC;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -247,21 +245,32 @@ public class EmployeeDAO {
             throw new RuntimeException("Không có nhân viên thõa mãn!");
         }
 
-        final String sql = String.format("UPDATE `employees` SET `firstname`='%s', `lastname` = '%s', `email` = '%s', `phone` = '%s'," +
-                        "`hire_date` = '%s', `job` = '%s', `salary` = '%d', `commission` = '%f', `manager_id` = '%d', `department_id` = '%d'  WHERE `id` = '%d",
-                e.getFirstname(), e.getLastname(), e.getEmail(), e.getPhone(), e.getHire_date(), e.getJob(), e.getSalary(),
-                e.getCommission(), e.getManager_id(), e.getDepartment_id(), id);
+        final String sql = "UPDATE `employees` SET firstname = ?, lastname = ?, email = ?, phone = ?, " +
+                "hire_date = ?, job = ?, salary = ?, commission = ?, manager_id = ?, department_id = ? WHERE id = ?";
 
         try {
-            Statement sta = con.createStatement();
+            //Cách 2 dùng PreparedStatement k cần quy định kiểu dữ liệu
+            PreparedStatement pre = con.prepareStatement(sql);
 
-            long res = sta.executeUpdate(sql);
+            pre.setString(1, e.getFirstname());
+            pre.setString(2, e.getLastname());
+            pre.setString(3, e.getEmail());
+            pre.setString(4, e.getPhone());
+            pre.setString(5, e.getHire_date());
+            pre.setString(6, e.getJob());
+            pre.setInt(7, e.getSalary());
+            pre.setDouble(8, e.getCommission());
+            pre.setInt(9, e.getManager_id());
+            pre.setInt(10, e.getDepartment_id());
+            pre.setInt(11, id);
 
+            //Cập nhật dữ liệu
+            long res = pre.executeUpdate();
             if (res == 0) {
                 System.out.println("Update employees thất bại");
             }
 
-            sta.close();
+            pre.close();
             con.close();
 
         } catch (Exception ex) {
@@ -277,7 +286,7 @@ public class EmployeeDAO {
             throw new RuntimeException("Không có nhân viên thõa mãn!");
         }
 
-        final String sql =  "DELETE FROM `students` WHERE `id` = " + id;
+        final String sql =  "DELETE FROM `employees` WHERE `id` = " + id;
 
         try {
             Statement sta = con.createStatement();

@@ -52,7 +52,7 @@ public class DepartmentDAO {
 
     public Department getByID(int id) throws SQLException {
         Connection con = ConnectJDBC.getConnection();
-        final String sql = "SELECT * FROM `departments` WHERE `id` = " + id;
+        final String sql = "SELECT * FROM `departments` WHERE `dept_id` = " + id;
         Department d = null;
 
         try {
@@ -61,6 +61,7 @@ public class DepartmentDAO {
             ResultSet res = sta.executeQuery(sql);
 
             if (res.next()) {
+                d = new Department();
                 d.setDept_id(res.getInt("dept_id"));
                 d.setDept_name(res.getString("dept_name"));
                 d.setManager_id(res.getInt("manager_id"));

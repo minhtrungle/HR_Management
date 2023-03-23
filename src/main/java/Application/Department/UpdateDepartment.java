@@ -1,6 +1,7 @@
 package Application.Department;
 import Application.Employee.AddEmployee;
 import Application.Employee.DeleteEmployee;
+import Application.OtherFunctions.ChangeDepartment;
 import Connection.ConnectJDBC;
 import Application.Employee.UpdateEmployee;
 
@@ -118,9 +119,10 @@ public class UpdateDepartment {
         jFrame.pack();
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
-    }private static void createDeleteEmpFromDeptGUI() {
-        DeleteEmployee delete = new DeleteEmployee();
-        JPanel deleteEmp = delete.getDeleteEmployeePanel();
+    }
+    private static void createDeleteEmpFromDeptGUI() {
+        ChangeDepartment delete = new ChangeDepartment();
+        JPanel deleteEmp = delete.getChangeDepartmentPanel();
 
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
