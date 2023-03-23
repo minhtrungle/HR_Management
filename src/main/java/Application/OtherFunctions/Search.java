@@ -19,7 +19,7 @@ public class Search {
             if (!Objects.equals(textId.getText(), "")) {
                 showInforEmp();
             }
-            if (!Objects.equals(textName.getText(), "") && Objects.equals(textId.getText(), "")) {
+            if (!Objects.equals(textName.getText(), "")) {
                 showInforEmp();
             }
             if (!Objects.equals(textPhone.getText(), "")) {
@@ -51,42 +51,22 @@ public class Search {
 
             if (!Objects.equals(id, "")) {
                 Employee e1 = employeeDAO.getByID(Integer.parseInt(id));
-                Object[] data1 = {
-                        e1.getId(),
-                        e1.getFirstname(),
-                        e1.getEmail(),
-                        e1.getPhone(),
-                };
-                tableModel.addRow(data1);
+                Object[] data = {e1.getId(), e1.getFirstname(), e1.getEmail(), e1.getPhone(),};
+                tableModel.addRow(data);
             }
             if (!Objects.equals(name, "")) {
                 Employee e2 = employeeDAO.getByFirstName(name);
-                Object[] data = {
-                        e2.getId(),
-                        e2.getFirstname(),
-                        e2.getEmail(),
-                        e2.getPhone(),
-                };
+                Object[] data = { e2.getId(), e2.getFirstname(), e2.getEmail(), e2.getPhone(),};
                 tableModel.addRow(data);
             }
             if (!Objects.equals(phone, "")) {
                 Employee e3 = employeeDAO.getByPhone(phone);
-                Object[] data = {
-                        e3.getId(),
-                        e3.getFirstname(),
-                        e3.getEmail(),
-                        e3.getPhone(),
-                };
+                Object[] data = {e3.getId(), e3.getFirstname(), e3.getEmail(), e3.getPhone(),};
                 tableModel.addRow(data);
             }
             if (!Objects.equals(email, "")) {
                 Employee e4 = employeeDAO.getByEmail(email);
-                Object[] data = {
-                        e4.getId(),
-                        e4.getFirstname(),
-                        e4.getEmail(),
-                        e4.getPhone(),
-                };
+                Object[] data = {e4.getId(), e4.getFirstname(), e4.getEmail(), e4.getPhone(),};
                 tableModel.addRow(data);
             }
         } catch (SQLException err){
