@@ -1,6 +1,9 @@
 package Application.Employee;
 import Application.Home.Home;
 import Connection.ConnectJDBC;
+import Dao.EmployeeDAO;
+import Model.Employee;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -12,6 +15,8 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public class AddEmployee {
+    private static EmployeeDAO empDAO = new EmployeeDAO();
+    private static Employee emp = new Employee();
     public AddEmployee() {
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -27,31 +32,25 @@ public class AddEmployee {
                 String commission = textCommission.getText();
                 String managerId = textManagerId.getText();
                 String departmentId = textDepartmentId.getText();
-                String sql = "INSERT INTO `employees` (id, firstname, lastname, email, phone, hire_date, job, salary, commission, manager_id, department_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
                 if (!Objects.equals(id, "") && !Objects.equals(firstName, "") && !Objects.equals(lastName, "") && !Objects.equals(email, "") && !Objects.equals(phone, "")
                         && !Objects.equals(hireDate, "") && !Objects.equals(job, "") && !Objects.equals(salary, "") && !Objects.equals(commission, "") && !Objects.equals(managerId, "") && !Objects.equals(departmentId, "")) {
                     try {
-                        Connection con = ConnectJDBC.getConnection();
+                        emp.setId(Integer.parseInt(id));
+                        emp.setFirstname(firstName);
+                        emp.setLastname(lastName);
+                        emp.setEmail(email);
+                        emp.setPhone(phone);
+                        emp.setHire_date(hireDate);
+                        emp.setJob(job);
+                        emp.setSalary(Integer.parseInt(salary));
+                        emp.setCommission(Double.parseDouble(commission));
+                        emp.setManager_id(Integer.parseInt(managerId));
+                        emp.setDepartment_id(Integer.parseInt(departmentId));
 
-                        PreparedStatement pre = con.prepareStatement(sql);
-                        pre.setString(1, id);
-                        pre.setString(2, firstName);
-                        pre.setString(3, lastName);
-                        pre.setString(4, email);
-                        pre.setString(5, phone);
-                        pre.setString(6, hireDate);
-                        pre.setString(7, job);
-                        pre.setString(8, salary);
-                        pre.setString(9, commission);
-                        pre.setString(10, managerId);
-                        pre.setString(11, departmentId);
-
-                        pre.executeUpdate();
+                        empDAO.insertEmployee(emp);
 
                         JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                        Home home = new Home();
-                        home.getMainPanel();
                         //Đóng
                         JComponent component = (JComponent) e.getSource();
                         Window window = SwingUtilities.getWindowAncestor(component);
