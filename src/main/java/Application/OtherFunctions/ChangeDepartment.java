@@ -37,14 +37,14 @@ public class ChangeDepartment {
 
                                 //Cập nhật dữ liệu
                                 pre.executeUpdate();
+                                pre.close();
+                                con.close();
+
                                 //Đóng cửa sổ khi cập nhật xong
                                 JOptionPane.showMessageDialog(null, "Chuyển phòng ban cho nhân viên thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                                 JComponent component = (JComponent) e.getSource();
                                 Window window = SwingUtilities.getWindowAncestor(component);
                                 window.dispose();
-
-                                pre.close();
-                                con.close();
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
@@ -69,14 +69,14 @@ public class ChangeDepartment {
 
                                 //Cập nhật dữ liệu
                                 pre.executeUpdate();
+                                pre.close();
+                                con.close();
+
                                 //Đóng cửa sổ khi cập nhật xong
                                 JOptionPane.showMessageDialog(null, "Nhân viên tạm thời chưa có phòng ban", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                                 JComponent component = (JComponent) e.getSource();
                                 Window window = SwingUtilities.getWindowAncestor(component);
                                 window.dispose();
-
-                                pre.close();
-                                con.close();
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
@@ -93,6 +93,7 @@ public class ChangeDepartment {
         changeManagerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String empId = textEmpId.getText();
                 String managerId = textManagerId.getText();
                 String deptId = textDeptId.getText();
                 String sql = "UPDATE `employees` SET manager_id = ? WHERE department_id = ?";
@@ -102,9 +103,14 @@ public class ChangeDepartment {
 
                     PreparedStatement pre = con.prepareStatement(sql);
 
-
-                    pre.setString(1, managerId);
-                    pre.setString(2, deptId);
+                    //Cập nhật trừ trưởng phòng của phòng đó và trưởng phòng đứng dưới chủ tịch là "1"
+                    if (Objects.equals(managerId, empId)) {
+                        pre.setString(1, managerId);
+                        pre.setString(2, deptId);
+                    } else {
+                        pre.setInt(1, 1);
+                        pre.setString(2, deptId);
+                    }
                     //Cập nhật dữ liệu
                     pre.executeUpdate();
                     //Đóng cửa sổ khi cập nhật xong

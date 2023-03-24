@@ -21,7 +21,7 @@ public class DepartmentDAO {
      * @return employeeList
      */
     public static List<Department> getAllDepartment() throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         List<Department> departmentList = new ArrayList<>();
         Department d = new Department();
         final String sql = "SELECT * FROM `departments`";
@@ -79,7 +79,7 @@ public class DepartmentDAO {
     }
 
     public void insertDepartment(Department d) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         final String sql = String.format("INSERT INTO `departments` VALUES ('%d', '%s', '%d', '%d')",
                 d.getDept_id(), d.getDept_name(), d.getManager_id(), d.getLocation_id());
 
@@ -101,7 +101,7 @@ public class DepartmentDAO {
     }
 
     public void updateDepartment(Department d, int id) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
 
         Department dep = getByID(id);
         if (dep == null) {
@@ -129,7 +129,7 @@ public class DepartmentDAO {
     }
 
     public void deleteDepartment(int id) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
 
         Department dep = getByID(id);
         if (dep == null) {
@@ -155,7 +155,7 @@ public class DepartmentDAO {
         }
     }
     public void insertEmployeeByDept(Employee e, int idDept) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
         final String sql = String.format("INSERT INTO `employees` VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%f', '%d', '%d')",
                 e.getId(), e.getFirstname(), e.getLastname(), e.getEmail(), e.getPhone(), e.getHire_date(), e.getJob(), e.getSalary(),
                 e.getCommission(), e.getManager_id(), idDept);
@@ -177,7 +177,7 @@ public class DepartmentDAO {
         }
     }
     public void deleteEmployeeByDept(int id) throws SQLException {
-        Connection con = (Connection) ConnectJDBC.getConnection();
+        Connection con = ConnectJDBC.getConnection();
 
 //        if (emp == null) {
 //            throw new RuntimeException("Không có nhân viên thõa mãn!");

@@ -2,8 +2,6 @@ package Application.Home;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 
 import Application.Department.AddDepartment;
@@ -184,8 +182,8 @@ public class Home {
     private ResultSet resultSet;
     private void showEmployee(){
         try {
-            Object[] columnTitle = {"id", "firstname", "lastname", "email", "phone",
-                    "hire_date", "job", "salary", "commission", "manager_id", "department_id"};
+            Object[] columnTitle = {"Id", "First Name", "Last Name", "Email", "Phone",
+                    "Hire Date", "Job", "Salary", "Commission", "Manager Id", "Department Id"};
             tableModel = new DefaultTableModel(null, columnTitle);
             table1.setModel(tableModel);
 
@@ -216,7 +214,7 @@ public class Home {
     }
     private void showDepartment() {
         try {
-            Object[] columnTitle = {"dept_id", "dept_name", "manager_id", "location_id"};
+            Object[] columnTitle = {"Department Id", "Department Name", "Manager Id", "Location Id"};
             tableModel = new DefaultTableModel(null, columnTitle);
             table2.setModel(tableModel);
 
@@ -256,4 +254,6 @@ public class Home {
     private JButton refreshButton;
     private JButton changeDepartmentButton;
     private JButton incomeTaxButton;
+    private JButton sortButton;
+    private JButton logOutButton;
 }

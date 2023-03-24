@@ -13,7 +13,8 @@ import java.sql.*;
 import java.util.Objects;
 
 public class AddDepartment {
-
+    private static DepartmentDAO detDAO = new DepartmentDAO();
+    private static Department dept = new Department();
     public AddDepartment() {
         okCheckBox.addItemListener(new ItemListener() {
             @Override
@@ -26,30 +27,15 @@ public class AddDepartment {
                         String deptName = textDepartmentName.getText();
                         String managerId = textManagerId.getText();
                         String locationId = textLocationId.getText();
-                        final String sql = "INSERT INTO `departments` (dept_id, dept_name, manager_id, location_id) VALUES (?, ?, ?, ?)";
 
                         try {
-                            Connection con = ConnectJDBC.getConnection();
+                            dept.setDept_id(Integer.parseInt(deptId));
+                            dept.setDept_name(deptName);
+                            dept.setManager_id(Integer.parseInt(managerId));
+                            dept.setLocation_id(Integer.parseInt(locationId));
 
-                            PreparedStatement pre = con.prepareStatement(sql);
-
-                            pre.setString(1, deptId);
-                            pre.setString(2, deptName);
-                            pre.setString(3, managerId);
-                            pre.setString(4, locationId);
-
-//                                DepartmentDAO departmentDAO = new DepartmentDAO();
-//                                Department dep = departmentDAO.getByID(Integer.parseInt(deptId));
-//                                if (dep != null) {
-//                                    JOptionPane.showMessageDialog(null,
-//                                            "Department Id đã tồn tại",
-//                                            "Cảnh báo", JOptionPane.ERROR_MESSAGE);
-//                                }
-                            pre.executeUpdate();
-
+                            detDAO.insertDepartment(dept);
                             JOptionPane.showMessageDialog(null, "Thêm phòng ban thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                            Home home = new Home();
-                            home.getMainPanel();
                             //Đóng
                             JComponent component = (JComponent) e.getSource();
                             Window window = SwingUtilities.getWindowAncestor(component);
@@ -68,17 +54,14 @@ public class AddDepartment {
                         String deptId = textDepartmentId.getText();
                         String deptName = textDepartmentName.getText();
                         String locationId = textLocationId.getText();
-                        final String sql = "INSERT INTO `departments` (dept_id, dept_name, manager_id, location_id) VALUES (?, ?, ?, ?)";
+
                         try {
-                            Connection con = ConnectJDBC.getConnection();
-                            PreparedStatement pre = con.prepareStatement(sql);
+                            dept.setDept_id(Integer.parseInt(deptId));
+                            dept.setDept_name(deptName);
+                            dept.setManager_id(0);
+                            dept.setLocation_id(Integer.parseInt(locationId));
 
-                            pre.setString(1, deptId);
-                            pre.setString(2, deptName);
-                            pre.setString(3, null);
-                            pre.setString(4, locationId);
-
-                            pre.executeUpdate();
+                            detDAO.insertDepartment(dept);
 
                             JOptionPane.showMessageDialog(null, "Thêm phòng ban thành công và tạm thời chưa có trưởng phòng", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                             Home home = new Home();
@@ -105,10 +88,7 @@ public class AddDepartment {
             Window window = SwingUtilities.getWindowAncestor(component);
             window.dispose();
         });
-
-
     }
-
     private DefaultTableModel tableModel;
     private ResultSet resultSet;
     private void showTableEmpNoManager(){
