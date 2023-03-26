@@ -2,7 +2,14 @@ package Application.Home;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.*;
+import java.util.List;
+import java.util.Objects;
 
 import Application.Department.AddDepartment;
 import Application.Department.DeleteDepartment;
@@ -13,17 +20,26 @@ import Application.Employee.UpdateEmployee;
 import Application.OtherFunctions.ChangeDepartment;
 import Application.OtherFunctions.IncomeTax;
 import Application.OtherFunctions.Search;
-import Connection.ConnectJDBC;
+import Dao.DepartmentDAO;
+import Dao.EmployeeDAO;
+import Model.Department;
+import Model.Employee;
+import UseCases.CountDepartment;
+import UseCases.CountEmployee;
+import UseCases.CountManager;
+
 /**
  * Hiển thị các chức năng chọn và hiện danh sách employees và departments trong database
  * @author TrungLM
  */
 public class Home {
     public Home() {
-
         addEmpButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Trước khi thêm phải kiểm tra Id đã tồn tại chưa \n" +
-                    "Nếu chưa thêm Manager và Department thì nhập 0", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "1. Trước khi thêm phải kiểm tra Id đã tồn tại chưa \n" +
+                    "2. Nếu chưa thêm Manager và Department thì nhập 0",
+                    "Chú ý",
+                    JOptionPane.INFORMATION_MESSAGE);
             SwingUtilities.invokeLater(Home::createAddEmployeeGUI);
             //Loát lại table Employee
 //                DefaultTableModel model = (DefaultTableModel) table1.getModel();
@@ -34,35 +50,112 @@ public class Home {
         updateEmpButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createUpdateEmployeeGUI));
 
         deleteEmpButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Nếu sa thải trưởng phòng cần cập nhật lại danh sách trưởng phòng ở Employee và Department", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Nếu sa thải trưởng phòng cần cập nhật lại danh sách trưởng phòng ở Employee và Department",
+                    "Chú ý",
+                    JOptionPane.INFORMATION_MESSAGE);
             SwingUtilities.invokeLater(Home::createDeleteEmployeeGUI);
         });
 
-        addDeptButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createAddDepartmentGUI));
+        addDeptButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null,
+                    "Nếu thêm nhân viên lên làm trưởng phòng thì sẽ tự động cập nhật phòng ban mới cho nhân viên đó",
+                    "Chú ý",
+                    JOptionPane.INFORMATION_MESSAGE);
+            SwingUtilities.invokeLater(Home::createAddDepartmentGUI);
+        });
 
         updateDeptButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createUpdateDepartmentGUI));
 
         deleteDeptButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Trước khi xóa phải chuyển phòng ban cho nhân viên, đồng ý thì tích còn không thì BƯỚC", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Trước khi xóa phải chuyển phòng ban cho nhân viên, đồng ý thì tích còn không thì BƯỚC",
+                    "Chú ý",
+                    JOptionPane.INFORMATION_MESSAGE);
             SwingUtilities.invokeLater(Home::createDeleteDepartmentGUI);
         });
 
         refreshButton.addActionListener(e -> {
             showEmployee();
             showDepartment();
+            showCurrentofEmpAndDept();
         });
 
         searchButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createSearchEmployeeGUI));
 
         changeDepartmentButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Nếu nhân viên tạm thời chưa được xếp phòng ban thì không tích vào ô. \n" +
-                    "Nếu chuyển quản lý thì danh sách quản lý đó bên Employee và Department phải cập nhật cùng ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "1. Nếu nhân viên tạm thời chưa được xếp phòng ban thì không tích vào ô \n" +
+                    "2. Nếu đưa nhân viên lên làm quản lý thì danh sách quản lý bên Employee và Department phải cập nhật cùng \n",
+                    "Chú ý",
+                    JOptionPane.INFORMATION_MESSAGE);
             SwingUtilities.invokeLater(Home::createChangeDepartmentGUI);
         });
 
         incomeTaxButton.addActionListener(e -> SwingUtilities.invokeLater(Home::createIncomeTaxGUI));
-    }
 
+        sortButton.addActionListener(e -> {
+            try {
+                Object[] columnTitle = {"Id", "First Name", "Last Name", "Email", "Phone",
+                        "Hire Date", "Job", "Salary", "Commission", "Manager Id", "Department Id"};
+                tableModel = new DefaultTableModel(null, columnTitle);
+                table1.setModel(tableModel);
+                tableModel.getDataVector().removeAllElements();
+
+                EmployeeDAO empDAO = new EmployeeDAO();
+                List<Employee> empList = empDAO.getAllEmployee();
+                empList.stream()
+                        //Giảm dần
+                        .sorted((o1, o2) -> {
+                            if (o1.getSalary() < o2.getSalary()) {
+                                return 1;
+                            } else if (o1.getSalary() > o2.getSalary()) {
+                                return -1;
+                            }
+                            return 0;
+                        })
+                        .forEach(emp -> {
+                            Object[] data = {
+                                    emp.getId(),
+                                    emp.getFirstname(),
+                                    emp.getLastname(),
+                                    emp.getEmail(),
+                                    emp.getPhone(),
+                                    emp.getHire_date(),
+                                    emp.getJob(),
+                                    emp.getSalary(),
+                                    emp.getCommission(),
+                                    emp.getManager_id(),
+                                    emp.getDepartment_id(),
+                            };
+                            tableModel.addRow(data);
+                        });
+            } catch (SQLException err){
+                throw new RuntimeException(err);
+            }
+        });
+
+        logOutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        textSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                //Chuyển viết hoa thành thường
+                String searchString = textSearch.getText().toLowerCase();
+                searchEmployee(searchString);
+            }
+        });
+    }
+    public void searchEmployee( String str) {
+        tableModel = (DefaultTableModel) table1.getModel();
+        TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<>(tableModel);
+        table1.setRowSorter(tableRowSorter);
+        tableRowSorter.setRowFilter(RowFilter.regexFilter(str));
+    }
 
     /**
      * Các hàm để khi bấm button sẽ gọi bên .form để hiện form của Employee
@@ -179,32 +272,29 @@ public class Home {
         jFrame.setVisible(true);
     }
     private DefaultTableModel tableModel;
-    private ResultSet resultSet;
     private void showEmployee(){
         try {
             Object[] columnTitle = {"Id", "First Name", "Last Name", "Email", "Phone",
                     "Hire Date", "Job", "Salary", "Commission", "Manager Id", "Department Id"};
             tableModel = new DefaultTableModel(null, columnTitle);
             table1.setModel(tableModel);
-
-            Connection connection = ConnectJDBC.getConnection();
-            Statement statement = connection.createStatement();
             tableModel.getDataVector().removeAllElements();
 
-            resultSet = statement.executeQuery("SELECT * FROM employees");
-            while (resultSet.next()){
+            EmployeeDAO empDAO = new EmployeeDAO();
+            List<Employee> empList = empDAO.getAllEmployee();
+            for ( int i = 0; i < empList.size(); i++) {
                 Object[] data = {
-                        resultSet.getInt("id"),
-                        resultSet.getString("firstname"),
-                        resultSet.getString("lastname"),
-                        resultSet.getString("email"),
-                        resultSet.getString("phone"),
-                        resultSet.getDate("hire_date"), //yyyy/mm/dd
-                        resultSet.getString("job"),
-                        resultSet.getInt("salary"),
-                        resultSet.getDouble("commission"),
-                        resultSet.getInt("manager_id"),
-                        resultSet.getInt("department_id"),
+                        empList.get(i).getId(),
+                        empList.get(i).getFirstname(),
+                        empList.get(i).getLastname(),
+                        empList.get(i).getEmail(),
+                        empList.get(i).getPhone(),
+                        empList.get(i).getHire_date(),//yyyy/mm/dd
+                        empList.get(i).getJob(),
+                        empList.get(i).getSalary(),
+                        empList.get(i).getCommission(),
+                        empList.get(i).getManager_id(),
+                        empList.get(i).getDepartment_id(),
                 };
                 tableModel.addRow(data);
             }
@@ -217,18 +307,16 @@ public class Home {
             Object[] columnTitle = {"Department Id", "Department Name", "Manager Id", "Location Id"};
             tableModel = new DefaultTableModel(null, columnTitle);
             table2.setModel(tableModel);
-
-            Connection connection = ConnectJDBC.getConnection();
-            Statement statement = connection.createStatement();
             tableModel.getDataVector().removeAllElements();
 
-            resultSet = statement.executeQuery("SELECT * FROM departments");
-            while (resultSet.next()){
+            DepartmentDAO deptDAO = new DepartmentDAO();
+            List<Department> listDept = deptDAO.getAllDepartment();
+            for ( int i = 0; i < listDept.size(); i++) {
                 Object[] data = {
-                        resultSet.getString("dept_id"),
-                        resultSet.getString("dept_name"),
-                        resultSet.getString("manager_id"),
-                        resultSet.getString("location_id")
+                        listDept.get(i).getDept_id(),
+                        listDept.get(i).getDept_name(),
+                        listDept.get(i).getManager_id(),
+                        listDept.get(i).getLocation_id(),
                 };
                 tableModel.addRow(data);
             }
@@ -236,9 +324,24 @@ public class Home {
             throw new RuntimeException(err);
         }
     }
+    public void showCurrentofEmpAndDept() {
+        try {
+            long countEmp = new CountEmployee().coutEmployee();
+            textCountEmployee.setText(String.valueOf(countEmp));
+
+            long countManager = new CountManager().countManager();
+            textCountManager.setText(String.valueOf(countManager));
+
+            long countDept = new CountDepartment().coutDepartment();
+            textCountDepartment.setText(String.valueOf(countDept));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public JPanel getMainPanel(){
         showEmployee();
         showDepartment();
+        showCurrentofEmpAndDept();
         return homePanel;
     }
     private JPanel homePanel;
@@ -256,4 +359,10 @@ public class Home {
     private JButton incomeTaxButton;
     private JButton sortButton;
     private JButton logOutButton;
+    private JTextField textSearch;
+    private JPanel countEmployee;
+    private JLabel textCountManager;
+    private JLabel textCountEmployee;
+    private JLabel textCountDepartment;
+
 }
