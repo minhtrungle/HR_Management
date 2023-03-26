@@ -153,8 +153,11 @@ public class Employee implements Comparable<Employee> {
 
     @Override
     public int compareTo(Employee o) {
-        String mFullName = lastname + " " + firstname;
-        String oFullName = o.lastname + " " + o.firstname;
-        return mFullName.compareTo(oFullName);
+        if (this.salary > o.salary) {
+            return 1;
+        } else if (this.salary < o.salary) {
+            return -1;
+        }
+        return 0;
     }
 }
