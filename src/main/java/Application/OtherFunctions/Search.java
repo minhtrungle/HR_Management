@@ -13,7 +13,7 @@ import java.util.Objects;
 
 
 public class Search {
-    private static EmployeeDAO employeeDAO = new EmployeeDAO();
+    private static EmployeeDAO empDAO = new EmployeeDAO();
     public Search() {
         searchButton.addActionListener(e -> {
             if (!Objects.equals(textId.getText(), "")) {
@@ -29,11 +29,13 @@ public class Search {
                 showInforEmp();
             }
         });
+
         cancelButton.addActionListener(e -> {
             JComponent component = (JComponent) e.getSource();
             Window window = SwingUtilities.getWindowAncestor(component);
             window.dispose();
         });
+
     }
     private DefaultTableModel tableModel;
 
@@ -50,22 +52,22 @@ public class Search {
             tableModel.getDataVector().removeAllElements();
 
             if (!Objects.equals(id, "")) {
-                Employee e1 = employeeDAO.getByID(Integer.parseInt(id));
+                Employee e1 = empDAO.getByID(Integer.parseInt(id));
                 Object[] data = {e1.getId(), e1.getFirstname(), e1.getEmail(), e1.getPhone(),};
                 tableModel.addRow(data);
             }
             if (!Objects.equals(name, "")) {
-                Employee e2 = employeeDAO.getByFirstName(name);
+                Employee e2 = empDAO.getByFirstName(name);
                 Object[] data = { e2.getId(), e2.getFirstname(), e2.getEmail(), e2.getPhone(),};
                 tableModel.addRow(data);
             }
             if (!Objects.equals(phone, "")) {
-                Employee e3 = employeeDAO.getByPhone(phone);
+                Employee e3 = empDAO.getByPhone(phone);
                 Object[] data = {e3.getId(), e3.getFirstname(), e3.getEmail(), e3.getPhone(),};
                 tableModel.addRow(data);
             }
             if (!Objects.equals(email, "")) {
-                Employee e4 = employeeDAO.getByEmail(email);
+                Employee e4 = empDAO.getByEmail(email);
                 Object[] data = {e4.getId(), e4.getFirstname(), e4.getEmail(), e4.getPhone(),};
                 tableModel.addRow(data);
             }

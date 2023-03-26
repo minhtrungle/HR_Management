@@ -12,108 +12,129 @@ import java.util.Objects;
 
 public class ChangeDepartment {
     public ChangeDepartment() {
-        checkBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == 1) {
-                    showTableEmpAndDept();
-                    changeButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            String empId = textEmpId.getText();
-                            String deptId = textDeptId.getText();
-                            String managerId = textManagerId.getText();
-                            String sql = "UPDATE employees SET department_id = ?, manager_id = ? WHERE id = ?";
+        checkBox.addItemListener(e -> {
+            if (e.getStateChange() == 1) {
+                showTableEmpAndDept();
+                changeButton.addActionListener(e12 -> {
+                    String empId = textEmpId.getText();
+                    String deptId = textDeptId.getText();
+                    String managerId = textManagerId.getText();
+                    String sql = "UPDATE employees SET department_id = ?, manager_id = ? WHERE id = ?";
 
-                            try {
-                                Connection con = ConnectJDBC.getConnection();
+                    try {
+                        Connection con = ConnectJDBC.getConnection();
 
-                                PreparedStatement pre = con.prepareStatement(sql);
+                        PreparedStatement pre = con.prepareStatement(sql);
 
-                                pre.setString(1, deptId);
-                                pre.setString(2, managerId);
-                                pre.setString(3, empId);
+                        pre.setString(1, deptId);
+                        pre.setString(2, managerId);
+                        pre.setString(3, empId);
 
 
-                                //Cập nhật dữ liệu
-                                pre.executeUpdate();
-                                pre.close();
-                                con.close();
+                        //Cập nhật dữ liệu
+                        pre.executeUpdate();
+                        pre.close();
+                        con.close();
 
-                                //Đóng cửa sổ khi cập nhật xong
-                                JOptionPane.showMessageDialog(null, "Chuyển phòng ban cho nhân viên thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                                JComponent component = (JComponent) e.getSource();
-                                Window window = SwingUtilities.getWindowAncestor(component);
-                                window.dispose();
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    });
-                } else {
-                    changeButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            String empId = textEmpId.getText();
-                            String sql = "UPDATE employees SET department_id = ?, manager_id = ? WHERE id = ?";
+                        //Đóng cửa sổ khi cập nhật xong
+                        JOptionPane.showMessageDialog(null,
+                                "Chuyển phòng ban cho nhân viên thành công",
+                                "Thông báo",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        JComponent component = (JComponent) e12.getSource();
+                        Window window = SwingUtilities.getWindowAncestor(component);
+                        window.dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            } else {
+                changeButton.addActionListener(e1 -> {
+                    String empId = textEmpId.getText();
+                    String sql = "UPDATE employees SET department_id = ?, manager_id = ? WHERE id = ?";
 
-                            try {
-                                Connection con = ConnectJDBC.getConnection();
+                    try {
+                        Connection con = ConnectJDBC.getConnection();
 
-                                PreparedStatement pre = con.prepareStatement(sql);
+                        PreparedStatement pre = con.prepareStatement(sql);
 
-                                pre.setString(1, null);
-                                pre.setString(2, null);
-                                pre.setString(3, empId);
+                        pre.setInt(1, 0);
+                        pre.setInt(2, 0);
+                        pre.setString(3, empId);
 
 
-                                //Cập nhật dữ liệu
-                                pre.executeUpdate();
-                                pre.close();
-                                con.close();
+                        //Cập nhật dữ liệu
+                        pre.executeUpdate();
+                        pre.close();
+                        con.close();
 
-                                //Đóng cửa sổ khi cập nhật xong
-                                JOptionPane.showMessageDialog(null, "Nhân viên tạm thời chưa có phòng ban", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                                JComponent component = (JComponent) e.getSource();
-                                Window window = SwingUtilities.getWindowAncestor(component);
-                                window.dispose();
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    });
-                }
+                        //Đóng cửa sổ khi cập nhật xong
+                        JOptionPane.showMessageDialog(null,
+                                "Nhân viên tạm thời chưa có phòng ban",
+                                "Thông báo",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        JComponent component = (JComponent) e1.getSource();
+                        Window window = SwingUtilities.getWindowAncestor(component);
+                        window.dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
         });
+
         cancelButton.addActionListener(e -> {
             JComponent component = (JComponent) e.getSource();
             Window window = SwingUtilities.getWindowAncestor(component);
             window.dispose();
         });
-        changeManagerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String empId = textEmpId.getText();
-                String managerId = textManagerId.getText();
-                String deptId = textDeptId.getText();
-                String sql = "UPDATE `employees` SET manager_id = ? WHERE department_id = ?";
 
+        changeManagerButton.addActionListener(e -> {
+            int managerId = Integer.parseInt(textManagerId.getText());
+            String deptId = textDeptId.getText();
+            //Cập nhật trừ trưởng phòng của phòng đó và trưởng phòng đứng dưới chủ tịch là "1"
+            String sql = "UPDATE `employees` SET manager_id = ? WHERE department_id = ? AND id !=" + managerId ;
+
+            try {
+                Connection con = ConnectJDBC.getConnection();
+
+                PreparedStatement pre = con.prepareStatement(sql);
+
+                pre.setInt(1, managerId);
+                pre.setString(2, deptId);
+//
+                //Cập nhật dữ liệu
+                pre.executeUpdate();
+                //Đóng cửa sổ khi cập nhật xong
+                JComponent component = (JComponent) e.getSource();
+                Window window = SwingUtilities.getWindowAncestor(component);
+                window.dispose();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        changeManagerButton.addActionListener(e -> {
+            String managerId = textManagerId.getText();
+            String deptId = textDeptId.getText();
+            String sql = "UPDATE `departments` SET manager_id = ? WHERE dept_id = ?";
+
+            if (!Objects.equals(managerId, "") && !Objects.equals(deptId, "")) {
                 try {
                     Connection con = ConnectJDBC.getConnection();
 
                     PreparedStatement pre = con.prepareStatement(sql);
 
-                    //Cập nhật trừ trưởng phòng của phòng đó và trưởng phòng đứng dưới chủ tịch là "1"
-                    if (Objects.equals(managerId, empId)) {
-                        pre.setString(1, managerId);
-                        pre.setString(2, deptId);
-                    } else {
-                        pre.setInt(1, 1);
-                        pre.setString(2, deptId);
-                    }
+
+                    pre.setString(1, managerId);
+                    pre.setString(2, deptId);
                     //Cập nhật dữ liệu
                     pre.executeUpdate();
                     //Đóng cửa sổ khi cập nhật xong
+                    JOptionPane.showMessageDialog(null,
+                            "Cập nhật Manager Id thành công",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
                     JComponent component = (JComponent) e.getSource();
                     Window window = SwingUtilities.getWindowAncestor(component);
                     window.dispose();
@@ -121,39 +142,11 @@ public class ChangeDepartment {
                     ex.printStackTrace();
                 }
             }
-        });
-        changeManagerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String managerId = textManagerId.getText();
-                String deptId = textDeptId.getText();
-                String sql = "UPDATE `departments` SET manager_id = ? WHERE dept_id = ?";
-
-                if (!Objects.equals(managerId, "") && !Objects.equals(deptId, "")) {
-                    try {
-                        Connection con = ConnectJDBC.getConnection();
-
-                        PreparedStatement pre = con.prepareStatement(sql);
-
-
-                        pre.setString(1, managerId);
-                        pre.setString(2, deptId);
-                        //Cập nhật dữ liệu
-                        pre.executeUpdate();
-                        //Đóng cửa sổ khi cập nhật xong
-                        JOptionPane.showMessageDialog(null, "Cập nhật Manager Id thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                        JComponent component = (JComponent) e.getSource();
-                        Window window = SwingUtilities.getWindowAncestor(component);
-                        window.dispose();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                else {
-                    JOptionPane.showMessageDialog(null,
-                            "Không được để trống",
-                            "Cảnh báo", JOptionPane.ERROR_MESSAGE);
-                }
+            else {
+                JOptionPane.showMessageDialog(null,
+                        "Không được để trống",
+                        "Cảnh báo",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
     }
