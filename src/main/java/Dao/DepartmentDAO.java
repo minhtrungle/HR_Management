@@ -4,10 +4,7 @@ import Model.Department;
 import Model.Employee;
 import Connection.ConnectJDBC;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +20,6 @@ public class DepartmentDAO {
     public static List<Department> getAllDepartment() throws SQLException {
         Connection con = ConnectJDBC.getConnection();
         List<Department> departmentList = new ArrayList<>();
-        Department d = new Department();
         final String sql = "SELECT * FROM `departments`";
 
         try {
@@ -32,6 +28,7 @@ public class DepartmentDAO {
             ResultSet res = sta.executeQuery(sql);
 
             while (res.next()) {
+                Department d = new Department();
                 d.setDept_id(res.getInt("dept_id"));
                 d.setDept_name(res.getString("dept_name"));
                 d.setManager_id(res.getInt("manager_id"));
@@ -80,19 +77,22 @@ public class DepartmentDAO {
 
     public void insertDepartment(Department d) throws SQLException {
         Connection con = ConnectJDBC.getConnection();
-        final String sql = String.format("INSERT INTO `departments` VALUES ('%d', '%s', '%d', '%d')",
-                d.getDept_id(), d.getDept_name(), d.getManager_id(), d.getLocation_id());
+        final String sql = String.format("INSERT INTO `departments` VALUES (?, ?, ?, ?)");
 
         try {
-            Statement sta = con.createStatement();
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, d.getDept_id());
+            pre.setString(2, d.getDept_name());
+            pre.setInt(3, d.getManager_id());
+            pre.setInt(4, d.getLocation_id());
 
-            long res = sta.executeUpdate(sql);
+            long res = pre.executeUpdate();
 
             if (res == 0) {
                 System.out.println("Insert departments thất bại");
             }
 
-            sta.close();
+            pre.close();
             con.close();
 
         } catch (Exception ex) {
@@ -108,8 +108,8 @@ public class DepartmentDAO {
             throw new RuntimeException("Không có phòng ban thõa mãn!");
         }
 
-        final String sql = String.format("UPDATE `departments` SET `dept_id` = '%d', `dept_name` = '%s', `manager_id` = '%d', `location_id` = '%d'",
-                d.getDept_id(), d.getDept_name(), d.getManager_id(), d.getLocation_id());
+        final String sql = String.format("UPDATE `departments` SET `dept_name` = '%s', `manager_id` = '%d', `location_id` = '%d' WHERE dept_id = " + id,
+               d.getDept_name(), d.getManager_id(), d.getLocation_id(), id);
 
         try {
             Statement sta = con.createStatement();
@@ -136,7 +136,7 @@ public class DepartmentDAO {
             throw new RuntimeException("Không có phòng ban thõa mãn!");
         }
 
-        final String sql = "DELETE FROM `departments` WHERE `id` = " + id;
+        final String sql = "DELETE FROM `departments` WHERE `dept_id` = " + id;
 
         try {
             Statement sta = con.createStatement();

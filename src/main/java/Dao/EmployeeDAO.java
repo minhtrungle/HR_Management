@@ -19,7 +19,6 @@ public class EmployeeDAO {
     public static List<Employee> getAllEmployee() throws SQLException {
         Connection con = ConnectJDBC.getConnection();
         List<Employee> employeeList = new ArrayList<>();
-        Employee e = new Employee();
         final String sql = "SELECT * FROM `employees`";
 
         try {
@@ -28,6 +27,7 @@ public class EmployeeDAO {
             ResultSet res = sta.executeQuery(sql);
 
             while (res.next()) {
+                Employee e = new Employee();
                 e.setId(res.getInt("id"));
                 e.setFirstname(res.getString("firstname"));
                 e.setLastname(res.getString("lastname"));
@@ -277,7 +277,25 @@ public class EmployeeDAO {
             ex.printStackTrace();
         }
     }
+    public void updateManagerAfterChoiceManager(Employee e, int managerId) throws SQLException {
+        Connection con = ConnectJDBC.getConnection();
+        final String sql = "UPDATE `employees` SET manager_id = ?, department_id = ? WHERE id = " + managerId;
 
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+
+            pre.setInt(1, e.getManager_id());
+            pre.setInt(2, e.getDepartment_id());
+
+            //Cập nhật dữ liệu
+            pre.executeUpdate();
+
+            pre.close();
+            con.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     public void deleteEmployee(int id) throws SQLException {
         Connection con = ConnectJDBC.getConnection();
 
