@@ -15,12 +15,8 @@ import static UseCases.IncomeTaxUseCase.getIncomeTaxById;
 
 public class IncomeTax {
     public IncomeTax() {
-        getButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showIncomeTax();
-            }
-        });
+        getButton.addActionListener(e -> showIncomeTax());
+
         cancelButton.addActionListener(e -> {
             JComponent component = (JComponent) e.getSource();
             Window window = SwingUtilities.getWindowAncestor(component);
