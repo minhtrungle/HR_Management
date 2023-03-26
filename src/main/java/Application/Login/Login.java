@@ -5,6 +5,7 @@ import Connection.ConnectJDBC;
 
 import java.sql.Connection;
 import Model.User;
+import Service.AuthenService;
 
 
 import javax.swing.*;
@@ -16,6 +17,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Login extends JDialog{
+    private static boolean isLoginSuccess = false;
+
+    // Khai bao service
+    private static AuthenService authenService = new AuthenService();
+    int count = 3;
     public Login(JFrame parent) {
         super(parent);
         setTitle("Login");
@@ -29,58 +35,45 @@ public class Login extends JDialog{
             public void actionPerformed(ActionEvent e) {
                 String userName = textUsername.getText();
                 String passWord = String.valueOf(textPassword.getPassword());
-                final String sql = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ?";
-
-                try {
-                    Connection con = ConnectJDBC.getConnection();
-
-                    PreparedStatement pre = con.prepareStatement(sql);
-
-                    pre.setString(1, userName);
-                    pre.setString(2, passWord);
-
-                    ResultSet res = pre.executeQuery();
-
-                    if (res.next()) {
-//                        JOptionPane.showMessageDialog(null,
-//                                "Đăng nhập thành công");
-                        new Home();
-                        setVisible(false); //đóng cửa sổ
-
-                    } else {
+                isLoginSuccess = authenService.login(userName, passWord);
+                if (count >= 0) {
+                    if (isLoginSuccess == true) {
                         JOptionPane.showMessageDialog(null,
-                                "username hoặc password không thõa mãn!",
-                                "Cảnh báo",
+                                "Đăng nhập thành công",
+                                "Thông báo",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        setVisible(false); //đóng cửa sổ
+                    } else if (isLoginSuccess == false) {
+                        count--;
+                        JOptionPane.showMessageDialog(null,
+                                "Bạn nhập sai mất rồiii :(, còn " + count + " lần nhập sai",
+                                "Thông báo",
                                 JOptionPane.ERROR_MESSAGE);
-                        textUsername.setText("");
-                        textPassword.setText("");
-//                        if (textPassword.setText("")) {
-//
-//                        }
+
+                        if (count == 0) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Bạn đã hết số lần nhập sai, hãy liên hệ quản trị viên",
+                                    "Thông báo",
+                                    JOptionPane.ERROR_MESSAGE);
+                            //Hết 3 lần hệ thống tự thoát
+                            System.exit(0);
+                        }
                     }
-                    pre.close();
-                    res.close();
-                    con.close();
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
+
                 }
-            }
+                }
         });
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Tạo đối tượng từ Jcomponent để xử lý xự kiện
-                JComponent component = (JComponent) e.getSource();
-                //Tạo object để chứa
-                Window window = SwingUtilities.getWindowAncestor(component);
-                //Đóng JFram
-                window.dispose();
-                Home home = new Home();
-            }
+        cancelButton.addActionListener(e -> {
+            //Tạo đối tượng từ Jcomponent để xử lý xự kiện
+            JComponent component = (JComponent) e.getSource();
+            //Tạo object để chứa
+            Window window = SwingUtilities.getWindowAncestor(component);
+            //Đóng JFram
+            window.dispose();
+            Home home = new Home();
         });
         setVisible(true);
     }
-    public User user;
     private JTextField textUsername;
     private JPasswordField textPassword;
     private JButton cancelButton;
