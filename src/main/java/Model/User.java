@@ -1,13 +1,15 @@
 package Model;
 
 public class User {
-    public String username;
-    public String password;
+    private long id;
+    private String username;
+    private String password;
 
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(long id, String username, String password) {
+        this.id = id;
         this.username = username;
         this.password = password;
     }
@@ -28,10 +30,19 @@ public class User {
         this.password = password;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "User[" +
-                "username='" + username + '\'' +
+                "id=" + id +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ']';
     }
