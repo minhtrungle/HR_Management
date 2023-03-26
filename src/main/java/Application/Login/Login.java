@@ -68,10 +68,10 @@ public class Login extends JDialog{
         });
 
         setVisible(true);
-        check.addActionListener(new ActionListener() {
+        checkPass.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (check.isSelected()) {
+                if (checkPass.isSelected()) {
                     textPassword.setEchoChar((char) 0);
                 } else {
                     textPassword.setEchoChar('*');
@@ -98,5 +98,5 @@ public class Login extends JDialog{
     private JButton cancelButton;
     private JButton signInButton;
     private JPanel loginPanel;
-    private JCheckBox check;
+    private JCheckBox checkPass;
 }

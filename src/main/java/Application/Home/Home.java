@@ -3,6 +3,7 @@ package Application.Home;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -17,6 +18,7 @@ import Application.Department.UpdateDepartment;
 import Application.Employee.AddEmployee;
 import Application.Employee.DeleteEmployee;
 import Application.Employee.UpdateEmployee;
+import Application.Login.Login;
 import Application.OtherFunctions.ChangeDepartment;
 import Application.OtherFunctions.IncomeTax;
 import Application.OtherFunctions.Search;
@@ -115,19 +117,9 @@ public class Home {
                             return 0;
                         })
                         .forEach(emp -> {
-                            Object[] data = {
-                                    emp.getId(),
-                                    emp.getFirstname(),
-                                    emp.getLastname(),
-                                    emp.getEmail(),
-                                    emp.getPhone(),
-                                    emp.getHire_date(),
-                                    emp.getJob(),
-                                    emp.getSalary(),
-                                    emp.getCommission(),
-                                    emp.getManager_id(),
-                                    emp.getDepartment_id(),
-                            };
+                            Object[] data = { emp.getId(), emp.getFirstname(), emp.getLastname(), emp.getEmail(), emp.getPhone(),
+                                    emp.getHire_date(), emp.getJob(), emp.getSalary(), emp.getCommission(), emp.getManager_id(),
+                                    emp.getDepartment_id(),};
                             tableModel.addRow(data);
                         });
             } catch (SQLException err){
@@ -135,10 +127,15 @@ public class Home {
             }
         });
 
-        logOutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            }
+        logOutButton.addActionListener(e -> {
+            JComponent component = (JComponent) e.getSource();
+            Window window = SwingUtilities.getWindowAncestor(component);
+            window.dispose();
+            JOptionPane.showMessageDialog(null,
+                    "Bạn đã Logout thành công ",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
+            new Login(null);
         });
         textSearch.addKeyListener(new KeyAdapter() {
             @Override
