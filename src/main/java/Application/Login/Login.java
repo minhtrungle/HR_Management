@@ -19,7 +19,6 @@ import java.sql.SQLException;
 
 public class Login extends JDialog{
     private static boolean isLoginSuccess = false;
-
     // Khai báo Service
     private static AuthenService authenService = new AuthenService();
     int count = 3;
@@ -43,10 +42,8 @@ public class Login extends JDialog{
                             "Đăng nhập thành công",
                             "Thông báo",
                             JOptionPane.INFORMATION_MESSAGE);
-
                     //Đóng cửa sổ
                     setVisible(false);
-
                     //Mở Home khi đăng nhập thành công
                     SwingUtilities.invokeLater(Login::createShowHomeGUI);
                 }
@@ -56,7 +53,6 @@ public class Login extends JDialog{
                             "Bạn nhập sai mất rồiii :(, còn " + count + " lần nhập sai",
                             "Thông báo",
                             JOptionPane.ERROR_MESSAGE);
-
                     if (count == 0) {
                         JOptionPane.showMessageDialog(null,
                                 "Bạn đã hết số lần nhập sai, hãy liên hệ quản trị viên",
@@ -79,7 +75,6 @@ public class Login extends JDialog{
         });
 
         setVisible(true);
-
     }
 
     public static void createShowHomeGUI() {
