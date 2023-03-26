@@ -4,6 +4,9 @@ import Application.Employee.DeleteEmployee;
 import Application.OtherFunctions.ChangeDepartment;
 import Connection.ConnectJDBC;
 import Application.Employee.UpdateEmployee;
+import Dao.DepartmentDAO;
+import Model.Department;
+import UseCases.CheckExistDept;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,30 +17,29 @@ import java.sql.*;
 import java.util.Objects;
 
 public class UpdateDepartment {
+    private static DepartmentDAO deptDAO = new DepartmentDAO();
     public UpdateDepartment() {
         updateButton.addActionListener(e -> {
             String idDept = textDeptId.getText();
             String nameDept = textDeptName.getText();
             String managerId = textManagerId.getText();
             String locationId = textLocationId.getText();
-            String sql = "UPDATE `departments` SET dept_name = ?, manager_id = ?, location_id = ? WHERE dept_id = ?";
 
             //Kiểm tra không được để trống ô nhập id!=""
             if (!Objects.equals(idDept, "") && !Objects.equals(nameDept, "") && !Objects.equals(managerId, "") && !Objects.equals(locationId, "")) {
                 try {
-                    Connection con = ConnectJDBC.getConnection();
+                    Department dept = new Department();
 
-                    PreparedStatement pre = con.prepareStatement(sql);
+                    dept.setDept_name(nameDept);
+                    dept.setManager_id(Integer.parseInt(managerId));
+                    dept.setLocation_id(Integer.parseInt(locationId));
 
-                    pre.setString(1, nameDept);
-                    pre.setString(2, managerId);
-                    pre.setString(3, locationId);
-                    pre.setString(4, idDept);
-
-                    //Cập nhật dữ liệu
-                    pre.executeUpdate();
+                    deptDAO.updateDepartment(dept, Integer.parseInt(idDept));
                     //Đóng cửa sổ khi cập nhật xong
-                    JOptionPane.showMessageDialog(null, "Cập nhật phòng ban thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "Cập nhật phòng ban thành công",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
                     JComponent component = (JComponent) e.getSource();
                     Window window = SwingUtilities.getWindowAncestor(component);
                     window.dispose();
@@ -48,13 +50,37 @@ public class UpdateDepartment {
             else {
                 JOptionPane.showMessageDialog(null,
                         "Không được để trống",
-                        "Cảnh báo", JOptionPane.ERROR_MESSAGE);
+                        "Cảnh báo",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
-        getInforButton.addActionListener(e -> showTableEmpOfDept());
+
+        getInforButton.addActionListener(e -> {
+            int idDept = Integer.parseInt(textDeptId.getText());
+            try {
+                if (new CheckExistDept().checkID(idDept) == true) {
+                    Department dept = deptDAO.getByID(idDept);
+                    textDeptName.setText(dept.getDept_name());
+                    textManagerId.setText(String.valueOf(dept.getManager_id()));
+                    textLocationId.setText(String.valueOf(dept.getLocation_id()));
+                    //Có phòng ban thì hiển thị danh sách nhân viên phòng ban đó
+                    showTableEmpOfDept();
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Không có phòng ban",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         addEmployeeButton.addActionListener(e -> SwingUtilities.invokeLater(UpdateDepartment::createAddEmpFromDeptGUI));
+
         updateEmployeeButton.addActionListener(e -> SwingUtilities.invokeLater(UpdateDepartment::createUpdateEmpFromDeptGUI));
+
         deleteEmployeeButton.addActionListener(e -> SwingUtilities.invokeLater(UpdateDepartment::createDeleteEmpFromDeptGUI));
+
         cancelButton.addActionListener(e -> {
             JComponent component = (JComponent) e.getSource();
             Window window = SwingUtilities.getWindowAncestor(component);
