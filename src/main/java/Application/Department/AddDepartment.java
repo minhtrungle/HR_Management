@@ -23,13 +23,11 @@ public class AddDepartment {
     private static Department dept = new Department();
     private static Employee emp = new Employee();
     public AddDepartment() {
-        okCheckBox.addItemListener(event -> {
-            //Khi tích chọn
-            if (event.getStateChange() == 1) {
-
+        okCheckBox.addActionListener(e -> {
+            if (okCheckBox.isSelected()) {
                 showTableEmpNoManager();
 
-                addButton.addActionListener(e -> {
+                addButton.addActionListener(event -> {
                     String deptId = textDepartmentId.getText();
                     String deptName = textDepartmentName.getText();
                     String managerId = textManagerId.getText();
@@ -67,7 +65,7 @@ public class AddDepartment {
                     textLocationId.setText("");
                 });
             } else {
-                addButton.addActionListener(e -> {
+                addButton.addActionListener(event -> {
                     int deptId = Integer.parseInt(textDepartmentId.getText());
                     String deptName = textDepartmentName.getText();
                     int locationId = Integer.parseInt(textLocationId.getText());

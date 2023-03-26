@@ -1,11 +1,7 @@
 package Application.Login;
 
-import Application.App.RunApp;
 import Application.Home.Home;
-import Connection.ConnectJDBC;
 
-import java.sql.Connection;
-import Model.User;
 import Service.AuthenService;
 
 
@@ -13,9 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Login extends JDialog{
     private static boolean isLoginSuccess = false;
@@ -75,6 +68,17 @@ public class Login extends JDialog{
         });
 
         setVisible(true);
+        check.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (check.isSelected()) {
+                    textPassword.setEchoChar((char) 0);
+                } else {
+                    textPassword.setEchoChar('*');
+                }
+                repaint();
+            }
+        });
     }
 
     public static void createShowHomeGUI() {
@@ -94,4 +98,5 @@ public class Login extends JDialog{
     private JButton cancelButton;
     private JButton signInButton;
     private JPanel loginPanel;
+    private JCheckBox check;
 }
