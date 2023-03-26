@@ -5,12 +5,14 @@ import UseCases.CheckExistEmployee;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.Objects;
 
 public class AddEmployee {
+    private static EmployeeDAO empDAO = new EmployeeDAO();
+    private static Employee emp = new Employee();
     public AddEmployee() {
         addButton.addActionListener(e -> {
             String id = textID.getText();
@@ -25,12 +27,10 @@ public class AddEmployee {
             String managerId = textManagerId.getText();
             String departmentId = textDepartmentId.getText();
 
-            if (!Objects.equals(id, "") && !Objects.equals(firstName, "") && !Objects.equals(lastName, "") && !Objects.equals(email, "") && !Objects.equals(phone, "")
-                    && !Objects.equals(hireDate, "") && !Objects.equals(job, "") && !Objects.equals(salary, "") && !Objects.equals(commission, "")) {
+            if (!Objects.equals(id, "") && !Objects.equals(firstName, "") && !Objects.equals(lastName, "") && !Objects.equals(email, "")
+                    && !Objects.equals(phone, "") && !Objects.equals(hireDate, "") && !Objects.equals(job, "") && !Objects.equals(salary, "")
+                    && !Objects.equals(commission, "") && !Objects.equals(managerId, "") && !Objects.equals(departmentId, "")) {
                 try {
-                    EmployeeDAO empDAO = new EmployeeDAO();
-                    Employee emp = new Employee();
-
                     emp.setId(Integer.parseInt(id));
                     emp.setFirstname(firstName);
                     emp.setLastname(lastName);
@@ -42,10 +42,13 @@ public class AddEmployee {
                     emp.setCommission(Double.parseDouble(commission));
                     emp.setManager_id(Integer.parseInt(managerId));
                     emp.setDepartment_id(Integer.parseInt(departmentId));
-
+                    //Add
                     empDAO.insertEmployee(emp);
 
-                    JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "Thêm nhân viên thành công",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
                     //Đóng
                     JComponent component = (JComponent) e.getSource();
                     Window window = SwingUtilities.getWindowAncestor(component);
@@ -66,33 +69,42 @@ public class AddEmployee {
                 textDepartmentId.setText("");
             } else {
                 JOptionPane.showMessageDialog(null,
-                        "Chỉ được để trống Manager và Department",
-                        "Cảnh báo", JOptionPane.ERROR_MESSAGE);
+                        "Không được để trống",
+                        "Cảnh báo",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
+
         cancelButton.addActionListener(e -> {
             JComponent component = (JComponent) e.getSource();
             Window window = SwingUtilities.getWindowAncestor(component);
             window.dispose();
         });
-        checkIdCheckBox.addItemListener(e -> {
-            if (e.getStateChange() == 1) {
-                int id = Integer.parseInt(textID.getText());
-                try {
-                    if (new CheckExistEmployee().checkExistEmployeeID(id) == true) {
-                        JOptionPane.showMessageDialog(null, "Nhân viên đã tồn tại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Có thể thêm nhân viên này", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
+
+        checkButton.addActionListener(e -> {
+            int id = Integer.parseInt(textID.getText());
+            try {
+                if (new CheckExistEmployee().checkID(id) == true) {
+                    JOptionPane.showMessageDialog(null,
+                            "Nhân viên đã tồn tại",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Có thể thêm nhân viên này",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
             }
         });
     }
+
     public JPanel getAddEmployeePanel(){
         return addEmployPanel;
     }
+
     private JButton cancelButton;
     private JButton addButton;
     private JTextField textID;
@@ -107,5 +119,5 @@ public class AddEmployee {
     private JTextField textCommission;
     private JTextField textManagerId;
     private JTextField textDepartmentId;
-    private JCheckBox checkIdCheckBox;
+    private JButton checkButton;
 }
