@@ -1,5 +1,6 @@
 package Application.Login;
 
+import Application.App.RunApp;
 import Application.Home.Home;
 import Connection.ConnectJDBC;
 
@@ -19,7 +20,7 @@ import java.sql.SQLException;
 public class Login extends JDialog{
     private static boolean isLoginSuccess = false;
 
-    // Khai bao service
+    // Khai báo Service
     private static AuthenService authenService = new AuthenService();
     int count = 3;
     public Login(JFrame parent) {
@@ -30,39 +31,44 @@ public class Login extends JDialog{
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        signInButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String userName = textUsername.getText();
-                String passWord = String.valueOf(textPassword.getPassword());
-                isLoginSuccess = authenService.login(userName, passWord);
-                if (count >= 0) {
-                    if (isLoginSuccess == true) {
+
+        signInButton.addActionListener(e -> {
+            String userName = textUsername.getText();
+            String passWord = String.valueOf(textPassword.getPassword());
+            isLoginSuccess = authenService.login(userName, passWord);
+
+            if (count >= 0) {
+                if (isLoginSuccess == true) {
+                    JOptionPane.showMessageDialog(null,
+                            "Đăng nhập thành công",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    //Đóng cửa sổ
+                    setVisible(false);
+
+                    //Mở Home khi đăng nhập thành công
+                    SwingUtilities.invokeLater(Login::createShowHomeGUI);
+                }
+                else if (isLoginSuccess == false) {
+                    count--;
+                    JOptionPane.showMessageDialog(null,
+                            "Bạn nhập sai mất rồiii :(, còn " + count + " lần nhập sai",
+                            "Thông báo",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    if (count == 0) {
                         JOptionPane.showMessageDialog(null,
-                                "Đăng nhập thành công",
-                                "Thông báo",
-                                JOptionPane.INFORMATION_MESSAGE);
-                        setVisible(false); //đóng cửa sổ
-                    } else if (isLoginSuccess == false) {
-                        count--;
-                        JOptionPane.showMessageDialog(null,
-                                "Bạn nhập sai mất rồiii :(, còn " + count + " lần nhập sai",
+                                "Bạn đã hết số lần nhập sai, hãy liên hệ quản trị viên",
                                 "Thông báo",
                                 JOptionPane.ERROR_MESSAGE);
-
-                        if (count == 0) {
-                            JOptionPane.showMessageDialog(null,
-                                    "Bạn đã hết số lần nhập sai, hãy liên hệ quản trị viên",
-                                    "Thông báo",
-                                    JOptionPane.ERROR_MESSAGE);
-                            //Hết 3 lần hệ thống tự thoát
-                            System.exit(0);
-                        }
+                        //Hết 3 lần hệ thống tự thoát
+                        System.exit(0);
                     }
+                }
+            }
+            });
 
-                }
-                }
-        });
         cancelButton.addActionListener(e -> {
             //Tạo đối tượng từ Jcomponent để xử lý xự kiện
             JComponent component = (JComponent) e.getSource();
@@ -70,10 +76,24 @@ public class Login extends JDialog{
             Window window = SwingUtilities.getWindowAncestor(component);
             //Đóng JFram
             window.dispose();
-            Home home = new Home();
         });
+
         setVisible(true);
+
     }
+
+    public static void createShowHomeGUI() {
+        Home home = new Home();
+        JPanel root = home.getMainPanel();
+
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(root);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
     private JTextField textUsername;
     private JPasswordField textPassword;
     private JButton cancelButton;
