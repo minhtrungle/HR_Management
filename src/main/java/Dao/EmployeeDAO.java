@@ -120,7 +120,7 @@ public class EmployeeDAO {
 
             ResultSet res = sta.executeQuery(sql);
 
-            if(res.next()) {
+            while(res.next()) {
                 e = new Employee();
                 e.setId(res.getInt("id"));
                 e.setFirstname(res.getString("firstname"));
@@ -155,7 +155,7 @@ public class EmployeeDAO {
 
             ResultSet res = sta.executeQuery(sql);
 
-            if(res.next()) {
+            while(res.next()) {
                 e = new Employee();
                 e.setId(res.getInt("id"));
                 e.setFirstname(res.getString("firstname"));

@@ -1,10 +1,12 @@
 package Dao;
 
 import Connection.ConnectJDBC;
+import Model.Employee;
 import Model.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class UserDAO {
@@ -50,5 +52,26 @@ public class UserDAO {
         }
 
         return user;
+    }
+    public void insertUser(User u) throws SQLException {
+        Connection con = ConnectJDBC.getConnection();
+        final String sql = String.format("INSERT INTO `users` VALUES ('%s', '%s')", u.getUsername(), u.getPassword());
+
+
+        try {
+            Statement sta = con.createStatement();
+
+            long res = sta.executeUpdate(sql);
+
+            if (res == 0) {
+                System.out.println("Insert users thất bại");
+            }
+
+            sta.close();
+            con.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
