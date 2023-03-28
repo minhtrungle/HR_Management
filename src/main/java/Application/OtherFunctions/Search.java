@@ -46,29 +46,29 @@ public class Search {
         String email = textEmail.getText();
 
         try {
-            Object[] columnTitle = {"Id", "First Name", "Email", "Phone"};
+            Object[] columnTitle = {"Id", "Name", "Email", "Phone"};
             tableModel = new DefaultTableModel(null, columnTitle);
             tableShowInforEmp.setModel(tableModel);
             tableModel.getDataVector().removeAllElements();
 
             if (!Objects.equals(id, "")) {
                 Employee e1 = empDAO.getByID(Integer.parseInt(id));
-                Object[] data = {e1.getId(), e1.getFirstname(), e1.getEmail(), e1.getPhone(),};
+                Object[] data = {e1.getId(), e1.getLastname() + ' ' + e1.getFirstname(), e1.getEmail(), e1.getPhone(),};
                 tableModel.addRow(data);
             }
             if (!Objects.equals(name, "")) {
                 Employee e2 = empDAO.getByFirstName(name);
-                Object[] data = { e2.getId(), e2.getFirstname(), e2.getEmail(), e2.getPhone(),};
+                Object[] data = { e2.getId(), e2.getLastname() + ' ' + e2.getFirstname(), e2.getEmail(), e2.getPhone(),};
                 tableModel.addRow(data);
             }
             if (!Objects.equals(phone, "")) {
                 Employee e3 = empDAO.getByPhone(phone);
-                Object[] data = {e3.getId(), e3.getFirstname(), e3.getEmail(), e3.getPhone(),};
+                Object[] data = {e3.getId(), e3.getLastname() + ' ' + e3.getFirstname(), e3.getEmail(), e3.getPhone(),};
                 tableModel.addRow(data);
             }
             if (!Objects.equals(email, "")) {
                 Employee e4 = empDAO.getByEmail(email);
-                Object[] data = {e4.getId(), e4.getFirstname(), e4.getEmail(), e4.getPhone(),};
+                Object[] data = {e4.getId(), e4.getLastname() + ' ' + e4.getFirstname(), e4.getEmail(), e4.getPhone(),};
                 tableModel.addRow(data);
             }
         } catch (SQLException err){
