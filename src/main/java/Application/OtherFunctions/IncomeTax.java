@@ -2,13 +2,13 @@ package Application.OtherFunctions;
 
 import Dao.EmployeeDAO;
 import Model.Employee;
+import UseCases.CheckExistEmployee;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static UseCases.IncomeTaxUseCase.getIncomeTaxById;
@@ -21,6 +21,24 @@ public class IncomeTax {
             JComponent component = (JComponent) e.getSource();
             Window window = SwingUtilities.getWindowAncestor(component);
             window.dispose();
+        });
+        checkButton.addActionListener(e -> {
+            int id = Integer.parseInt(textEmpId.getText());
+            try {
+                if (new CheckExistEmployee().checkID(id) == true) {
+                    JOptionPane.showMessageDialog(null,
+                            "Hãy nhập số người phụ thuộc",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Không có nhân viên này",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
     private DefaultTableModel tableModel;
@@ -60,4 +78,5 @@ public class IncomeTax {
     private JButton cancelButton;
     private JButton getButton;
     private JTextField textNumofDepd;
+    private JButton checkButton;
 }
