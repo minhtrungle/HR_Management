@@ -41,6 +41,7 @@ public class UserAdmin {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             });
+
             updateButton.addActionListener(e -> {
                 String HRUsername = textHRUsername.getText();
                 String HRPassword = String.valueOf(textHRPassword.getPassword());
@@ -71,6 +72,7 @@ public class UserAdmin {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             });
+
             deleteButton.addActionListener(e -> {
                 String HRUsername = textHRUsername.getText();
                 String HRPassword = String.valueOf(textHRPassword.getPassword());
@@ -98,15 +100,13 @@ public class UserAdmin {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             });
+
             cancelButton.addActionListener(e -> {
                 JComponent component = (JComponent) e.getSource();
                 Window window = SwingUtilities.getWindowAncestor(component);
                 window.dispose();
             });
         }
-
-
-
     public JPanel getUserPanel() {
         return userPanel;
     }
