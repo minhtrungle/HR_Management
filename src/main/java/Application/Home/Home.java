@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.List;
 
-import Admin.UserAdmin;
+import Application.Admin.UserAdmin;
 import Application.Department.AddDepartment;
 import Application.Department.DeleteDepartment;
 import Application.Department.UpdateDepartment;
