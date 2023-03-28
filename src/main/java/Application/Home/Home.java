@@ -4,11 +4,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.List;
 
+import Admin.UserAdmin;
 import Application.Department.AddDepartment;
 import Application.Department.DeleteDepartment;
 import Application.Department.UpdateDepartment;
@@ -143,6 +146,16 @@ public class Home {
                 searchEmployee(searchString);
             }
         });
+        userButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null,
+                        "Chỉ trưởng phòng HR mới được thêm user mới",
+                        "Chú ý",
+                        JOptionPane.INFORMATION_MESSAGE);
+                SwingUtilities.invokeLater(Home::createUserGUI);
+            }
+        });
     }
     public void searchEmployee( String str) {
         tableModel = (DefaultTableModel) table1.getModel();
@@ -261,6 +274,17 @@ public class Home {
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         jFrame.setContentPane(incomtaxEmp);
+        jFrame.pack();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
+    }
+    private static void createUserGUI() {
+        UserAdmin user = new UserAdmin();
+        JPanel userHR = user.getUserPanel();
+
+        JFrame jFrame = new JFrame();
+        jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jFrame.setContentPane(userHR);
         jFrame.pack();
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
