@@ -4,13 +4,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.List;
-import java.util.Objects;
 
 import Application.Department.AddDepartment;
 import Application.Department.DeleteDepartment;
@@ -142,7 +139,7 @@ public class Home {
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 //Chuyển viết hoa thành thường
-                String searchString = textSearch.getText().toLowerCase();
+                String searchString = textSearch.getText();
                 searchEmployee(searchString);
             }
         });
@@ -361,5 +358,6 @@ public class Home {
     private JLabel textCountManager;
     private JLabel textCountEmployee;
     private JLabel textCountDepartment;
+    private JButton userButton;
 
 }
