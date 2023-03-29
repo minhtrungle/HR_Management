@@ -2,6 +2,7 @@ package Application.Employee;
 import Dao.EmployeeDAO;
 import Model.Employee;
 import UseCases.CheckExistEmployee;
+import com.toedter.calendar.JDateChooser;
 
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ public class UpdateEmployee {
     private static EmployeeDAO empDAO = new EmployeeDAO();
     private static Employee emp = new Employee();
     public UpdateEmployee() {
+
         updateButton.addActionListener(e -> {
             String id = textId.getText();
             String firstName = textFirstName.getText();

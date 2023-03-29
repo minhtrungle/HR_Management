@@ -56,8 +56,11 @@ public class DeleteEmployee {
             try {
                 if (new CheckExistEmployee().checkID(idEmp) == true) {
                     if (new CheckIsManager().checkID(idEmp) == true) {
+                        Employee emp = empDAO.getByID(idEmp);
+                        int idDept = emp.getDepartment_id();
                         JOptionPane.showMessageDialog(null,
-                                "Đây là trưởng phòng, cần cập nhật lại trưởng phòng",
+                                "Đây là trưởng phòng của phòng ban có mã " + idDept + ", cần cập nhật lại trưởng phòng\n " +
+                                        "cho phòng  ban này trước khi xóa",
                                 "Thông báo",
                                 JOptionPane.INFORMATION_MESSAGE);
                         return;
